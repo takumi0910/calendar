@@ -1,0 +1,13 @@
+.react-calendar{
+  background-color: whitesmoke;
+}
+
+abbr{
+  display: block;
+  text-align: center;
+}
+
+button{
+  background-color: white;
+  border: #333333 solid 2px;
+}
