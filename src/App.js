@@ -8,23 +8,23 @@ export default class App extends React.Component {
       date: new Date(2021, 1, 0),
       //月のデータ
       month_days: {
-        20210506: { is_holiday: true },
-        20210105: { text: 'App作成' },
+        20210202: { is_holiday: true },
+        20210202: { text: '節分' },
         20210228: { text: 'App完成' },
-      }
+        count: { text: '' }
+      },
+      hogehoge: 'hogehoge',
+      isSubmitted: true,
+      value: '',
+      todoList: [],
     };
+    //this.handleSubmit = this.handleSubmit.bind(this);
     this.getTileClass = this.getTileClass.bind(this);
     this.getTileContent = this.getTileContent.bind(this);
-    this.addTodo = this.addEvent.bind(this);
   }
 
-  addEvent() {
-    // 追加
-    this.state.todo.push({
-      title: this.refs.newText.value
-    });
-  }
 
+  //カレンダー部分ここから
   // state の日付と同じ表記に変換
   getFormatDate(date) {
     return `${date.getFullYear()}${('0' + (date.getMonth() + 1)).slice(-2)}${('0' + date.getDate()).slice(-2)}`;
@@ -36,6 +36,7 @@ export default class App extends React.Component {
     if (view !== 'month') {
       return '';
     }
+    //クラスを付与してますよ
     return 'event';
   }
 
@@ -55,22 +56,69 @@ export default class App extends React.Component {
       </p>
     );
   }
+  //カレンダー部分ここまで
 
-  Eventadd() {
 
+
+
+  //自分で書いた処理ここから
+  onChange(e) {
+    this.setState({ value: e.target.value })
   }
 
+  add() {
+    this.setState({
+      todoList: this.state.todoList.push(this.state.value),
+      value: "",
+    })
+  }
+
+
+  /*handleChange = (e) => {
+    this.setState({ events: e.target.value });
+  }
+
+  送信データの保存
+  handleSubmit(e) {
+    //この記述がないとデータが飛ぶ
+    e.preventDefault();
+    this.state.events.push({ title: e.target.title.value }); // まだ保存されていない
+    // setStateを使ってstateを上書き
+    this.setState({ events: this.state.events }); // 保存完了
+    // inputのvalueを空に
+    e.target.title.value = '';
+  }*/
+
   render() {
+    console.log(this.state.todoList)
+    const todoListNode = this.state.todoList.map((todo, idx) => {
+      return <li key={idx}>{todo}</li>
+    })
+    let inputForm;
+    if (this.state.isSubmitted) {
+      inputForm = (
+        <>
+          <div className='schedulle'>
+            <input type="text" value={this.state.value} onChange={e => this.onChange(e)} />
+            <button onClick={() => this.add}>追加</button>
+            <p>{this.state.value}</p>
+            <ul>
+              {todoListNode}
+            </ul>
+          </div>
+        </>
+      );
+    }
+
     return (
       <>
-        <input type="text" ref="newText" />
-        <input type="button" value="追加" onClick={this.addTodo} />
         <Calendar
           locale="ja-JP"
           value={this.state.date}
           tileClassName={this.getTileClass}
           tileContent={this.getTileContent}
         />
+        {inputForm}
       </>
     );
   }

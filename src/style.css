@@ -11,3 +11,10 @@ button{
   background-color: white;
   border: #333333 solid 2px;
 }
+
+.schedulle{
+  width: 500px;
+  height: 500px;
+  margin: 0 auto;
+  
+}
