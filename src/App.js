@@ -1,11 +1,16 @@
 import React from 'react';
 import Calendar from 'react-calendar';
+import { useSelector, useDispatch } from "react-redux";
+import { Provider } from "react-redux"
+import Form from './form';
+import store from "./store/index";
+import lists from "./store/index"
 
 export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      date: new Date(2021, 1, 0),
+      date: new Date(2021, 2, 0),
       //月のデータ
       month_days: {
         20210202: { is_holiday: true },
@@ -16,7 +21,6 @@ export default class App extends React.Component {
       hogehoge: 'hogehoge',
       isSubmitted: true,
       value: '',
-      todoList: [],
     };
     //this.handleSubmit = this.handleSubmit.bind(this);
     this.getTileClass = this.getTileClass.bind(this);
@@ -90,7 +94,7 @@ export default class App extends React.Component {
   }*/
 
   render() {
-    console.log(this.state.todoList)
+    /*console.log(this.state.todoList)
     const todoListNode = this.state.todoList.map((todo, idx) => {
       return <li key={idx}>{todo}</li>
     })
@@ -99,27 +103,29 @@ export default class App extends React.Component {
       inputForm = (
         <>
           <div className='schedulle'>
+            <p>予定</p>
             <input type="text" value={this.state.value} onChange={e => this.onChange(e)} />
-            <button onClick={() => this.add}>追加</button>
-            <p>{this.state.value}</p>
-            <ul>
-              {todoListNode}
-            </ul>
           </div>
+          <button onClick={() => this.add}>追加</button>
+          <p>{this.state.value}</p>
+          <ul>
+            {todoListNode}
+          </ul>
         </>
       );
-    }
+    }*/
+
 
     return (
-      <>
+      <Provider store={store}>
         <Calendar
           locale="ja-JP"
           value={this.state.date}
           tileClassName={this.getTileClass}
           tileContent={this.getTileContent}
         />
-        {inputForm}
-      </>
+        <Form/>
+      </Provider>
     );
   }
 }
