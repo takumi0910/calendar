@@ -16,3 +16,9 @@ abbr{
   display: block;
   text-align: center;
 }
+
+.react-calendar__tile--active {
+  background: #006edc;
+  border-radius: 50%;
+  color: white;
+}

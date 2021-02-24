@@ -1,6 +1,5 @@
 import React from 'react';
 import Calendar from 'react-calendar';
-import { useSelector, useDispatch } from "react-redux";
 import { Provider } from "react-redux"
 import Form from './form';
 import store from "./store/index";
@@ -11,16 +10,13 @@ export default class App extends React.Component {
     super(props);
     this.state = {
       date: new Date(2021, 2, 0),
+      isSubmitted: false,
       //月のデータ
       month_days: {
         20210202: { is_holiday: true },
         20210202: { text: '節分' },
         20210228: { text: 'App完成' },
-        count: { text: '' }
       },
-      hogehoge: 'hogehoge',
-      isSubmitted: true,
-      value: '',
     };
     //this.handleSubmit = this.handleSubmit.bind(this);
     this.getTileClass = this.getTileClass.bind(this);
@@ -50,6 +46,7 @@ export default class App extends React.Component {
     if (view !== 'month') {
       return null;
     }
+    //日付の形式を表示可能に変えてくれる
     const day = this.getFormatDate(date);
     return (
       <p>
@@ -61,9 +58,6 @@ export default class App extends React.Component {
     );
   }
   //カレンダー部分ここまで
-
-
-
 
   //自分で書いた処理ここから
   onChange(e) {
@@ -77,54 +71,53 @@ export default class App extends React.Component {
     })
   }
 
-
-  /*handleChange = (e) => {
-    this.setState({ events: e.target.value });
+  handleSubmit() {
+    this.setState({ isSubmitted: true })
+  }
+  
+  handleSubmit_reverse() {
+    this.setState({ isSubmitted: false })
   }
 
-  送信データの保存
-  handleSubmit(e) {
-    //この記述がないとデータが飛ぶ
-    e.preventDefault();
-    this.state.events.push({ title: e.target.title.value }); // まだ保存されていない
-    // setStateを使ってstateを上書き
-    this.setState({ events: this.state.events }); // 保存完了
-    // inputのvalueを空に
-    e.target.title.value = '';
-  }*/
 
   render() {
-    /*console.log(this.state.todoList)
-    const todoListNode = this.state.todoList.map((todo, idx) => {
-      return <li key={idx}>{todo}</li>
-    })
-    let inputForm;
+
+    let contactForm;
     if (this.state.isSubmitted) {
-      inputForm = (
-        <>
-          <div className='schedulle'>
-            <p>予定</p>
-            <input type="text" value={this.state.value} onChange={e => this.onChange(e)} />
+    } else {
+      contactForm = (
+        /* formタグにonSubmitを追加してください */
+        <form onSubmit={() => { this.handleSubmit() }} >
+          <div className='test'>
+            <div className='content'>
+              <p>開始時間</p>
+              <input />
+              <p>イベント内容</p>
+              <input />
+              <input
+                type='submit'
+                value='登録'
+              />
+            </div>
           </div>
-          <button onClick={() => this.add}>追加</button>
-          <p>{this.state.value}</p>
-          <ul>
-            {todoListNode}
-          </ul>
-        </>
+        </form>
       );
-    }*/
-
-
+    }
     return (
       <Provider store={store}>
         <Calendar
           locale="ja-JP"
           value={this.state.date}
           tileClassName={this.getTileClass}
-          tileContent={this.getTileContent}
+          tileContent={this.store}
+          onClickDay={() => this.handleSubmit_reverse()}
+          onClickDay={(value) => console.log('Clicked day: ', value)} 
+          onDrillDown={({ activeStartDate, view }) => alert('Drilled down to: ', activeStartDate, view)}
         />
-        <Form/>
+        <div>
+          {contactForm}
+        </div>
+        <Form />
       </Provider>
     );
   }
