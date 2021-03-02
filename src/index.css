@@ -22,3 +22,7 @@ abbr{
   border-radius: 50%;
   color: white;
 }
+
+button{
+  width: 300px;
+}

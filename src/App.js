@@ -14,13 +14,13 @@ export default class App extends React.Component {
       //月のデータ
       month_days: {
         20210202: [
-          { 
+          {
             id: '1',
-            text: ['12:30～14:00 節分','ほげほげ']
-           },
-          { 
+            text: ['12:30～14:00 節分']
+          },
+          {
             id: '2',
-            text: ['15:30～17:00 節分11','ほげほげ'] 
+            text: ['15:30～17:00 節分']
           }
         ],
         20210228: [{ text: ['App完成'] }],
@@ -30,10 +30,8 @@ export default class App extends React.Component {
         content: ''
       }
     };
-    //this.handleSubmit = this.handleSubmit.bind(this);
-    this.getTileClass = this.getTileClass.bind(this);
+
     this.getTileContent = this.getTileContent.bind(this);
-    // this.handleSubmit_reverse = this.handleSubmit_reverse(this)
   }
 
   // state の日付と同じ表記に変換
@@ -41,15 +39,38 @@ export default class App extends React.Component {
     return `${date.getFullYear()}${('0' + (date.getMonth() + 1)).slice(-2)}${('0' + date.getDate()).slice(-2)}`;
   }
 
-  //日付のクラスを付与 (祝日用)
-  getTileClass({ view }) {
-    // 月表示のときのみ
-    if (view !== 'month') {
-      return '';
+  deliteState = (e) => {
+    
+    //クリックした日付とid
+    const day = e.target.className
+    const key = e.target.id
+　　const ids = []
+    const copy = this.state.month_days
+    const days = Object.keys(copy)
+    const index = days.indexOf(day)
+    const id_copy = this.state.month_days[day]
+    
+    for (let i = 0; i < this.state.month_days[day].length; i++) {
+      ids.push(...id_copy[i].id)
+      console.log(ids)
     }
-    //クラスを付与してますよ
-    return 'event';
+
+
+
+    
+
+    
+
+
+    //クリックした日のid
+    const kat = this.state.month_days[day].id
+    // console.log(this.state.month_days[day][0].id)
+
+    //×をクリックした日付を取得
+    if (index !== -1) {
+    }
   }
+
 
   //日付の内容を出力
   getTileContent({ date, view }) {
@@ -65,10 +86,11 @@ export default class App extends React.Component {
         {
           this.state.month_days[day] && this.state.month_days[day].map(date => {
             return (
-              <>
-              <p>{date.text} </p>
-              <br/>
-              </>
+              <div>
+                <button className={day} id={date.id} onClick={this.deliteState}> ×</button>
+                <p>{date.text}</p>
+                <br />
+              </div>
             )
           })
         }
@@ -77,6 +99,12 @@ export default class App extends React.Component {
         } */}
       </p>
     );
+  }
+  //id用の乱数作成
+  getUniqueStr(myStrong) {
+    var strong = 1000;
+    if (myStrong) strong = myStrong;
+    return new Date().getTime().toString(16) + Math.floor(strong * Math.random()).toString(16)
   }
 
   handleChange(event) {
@@ -91,44 +119,38 @@ export default class App extends React.Component {
     const newMonth_days = []
     const date = this.getFormatDate(new Date(this.state.selectedDate))
 
-
     const copySate = this.state.month_days
 
     const dates = Object.keys(copySate)
 
-    console.log(dates)
-
     const index = dates.indexOf(date)
-    if(index !== -1){
 
+    const sethat = this.getUniqueStr()
+
+    if (index !== -1) {
       console.log('aru')
-      copySate[date].push({text: [this.state.formvalues.content]})
 
-      if(date.id = 2){
-        copySate[date].concat()
-      }
+      if (this.state.formvalues.content !== "") {
+        copySate[date].push({ id: sethat, text: [this.state.formvalues.content] })
+        this.state.formvalues.content = ''
+      } else { }
 
-    }else{
+    } else {
 
       console.log('nai')
+      console.log(this.state.month_days[20210202].map)
 
-       //newMonth_daysの保存値をセット
-       copySate[date] = [
-        //formvaluesはformの入力値
-       { text: [this.state.formvalues.content]}
-
-         ]
-      
-
+      if (this.state.formvalues.content !== "") {
+        //newMonth_daysの保存値をセット
+        copySate[date] = [
+          //formvaluesはformの入力値
+          { text: [this.state.formvalues.content] }
+        ]
+        this.state.formvalues.content = ''
+      } else { }
     }
 
     this.setState({ month_days: copySate })
-
-
-
-   
-    // this.setState({ month_days: { ...this.state.month_days, ...newMonth_days } })
-    
   }
 
   //日付ブロックをクリックした際の処理
@@ -145,9 +167,23 @@ export default class App extends React.Component {
     return date.getFullYear() + '年' + (date.getMonth() + 1) + '月' + date.getDate() + '日'
   }
 
+  componentDidMount() {
+    if(localStorage.app){ // もし前回のデータがあったら、ローカルストレージの値を取得し、更新する
+      const saveDate = JSON.parse(localStorage.app);
+      this.setState({
+        month_days: saveDate.month_days,
+      })
+    }
+  }
+
+  // stateが変更されたら実行
+  componentDidUpdate() {
+    // ローカルストレージにステートの情報を保存
+    localStorage.setItem('app', JSON.stringify(this.state));
+  }
+
   render() {
     let contactForm;
-    
     //新しいstateが設定されるたびに表示内容を更新
     const title = ({ date, view }) => this.getTileContent({ date, view })
     if (this.state.isSubmitted) {
@@ -180,7 +216,6 @@ export default class App extends React.Component {
         <Calendar
           locale="ja-JP"
           value={this.state.date}
-          tileClassName={this.getTileClass}
           tileContent={title}
           onClickDay={this.handleSubmit_reverse.bind(this)}
         />
