@@ -13,21 +13,26 @@ export default class App extends React.Component {
       isSubmitted: true,
       //月のデータ
       month_days: {
-        20210202: [
-          {
-            id: '1',
-            text: ['12:30～14:00 節分']
-          },
-          {
-            id: '2',
-            text: ['15:30～17:00 節分']
-          }
-        ],
-        20210228: [{ text: ['App完成'] }],
+        // 20210202: [
+        //   {
+        //     id: '1',
+        //     text: ['12:30～14:00 節分'],
+        //     backup: ['12:30', '14:00', '節分']
+        //   },
+        //   {
+        //     id: '2',
+        //     text: ['15:30～17:00 節分'],
+        //     backup: ['15:30', '17:00', '節分']
+        //   }
+        // ],
+        // 20210228: [{ text: ['App完成'] }],
       },
       selectedDate: null,
+      backups: '',
       formvalues: {
-        content: ''
+        content: '',
+        start: '',
+        end: ''
       }
     };
 
@@ -39,38 +44,45 @@ export default class App extends React.Component {
     return `${date.getFullYear()}${('0' + (date.getMonth() + 1)).slice(-2)}${('0' + date.getDate()).slice(-2)}`;
   }
 
+  //予定を消す処理
   deliteState = (e) => {
-    
-    //クリックした日付とid
     const day = e.target.className
     const key = e.target.id
-　　const ids = []
-    const copy = this.state.month_days
-    const days = Object.keys(copy)
-    const index = days.indexOf(day)
+    const ids = []
     const id_copy = this.state.month_days[day]
-    
+
     for (let i = 0; i < this.state.month_days[day].length; i++) {
-      ids.push(...id_copy[i].id)
-      console.log(ids)
+      ids.push(id_copy[i].id)
     }
 
-
-
-    
-
-    
-
-
-    //クリックした日のid
-    const kat = this.state.month_days[day].id
-    // console.log(this.state.month_days[day][0].id)
-
-    //×をクリックした日付を取得
-    if (index !== -1) {
+    for (let i = 0; i < ids.length; i++) {
+      if (ids[i] === key) {
+        this.state.month_days[day].splice(i, 1);
+        this.setState({ isSubmitted: true })
+        break
+      }
     }
   }
 
+  //予定を編集する処理
+  editState = (e) => {
+    const day = e.target.className
+    const key = e.target.id
+    const ids = []
+    const id_copy = this.state.month_days[day]
+
+    for (let i = 0; i < this.state.month_days[day].length; i++) {
+      ids.push(id_copy[i].id)
+    }
+    for (let i = 0; i < ids.length; i++) {
+      if (ids[i] === key) {
+        console.log(this.state.month_days[day][i].backup[0], this.state.month_days[day][i].backup[1], this.state.month_days[day][i].backup[2])
+        this.setState({ backups: [this.state.month_days[day][i].backup[0], this.state.month_days[day][i].backup[1], this.state.month_days[day][i].backup[2]] })
+        // console.log(this.state.backups[0], this.state.backups[1], this.state.backups[2])
+        this.deliteState(e)
+      }
+    }
+  }
 
   //日付の内容を出力
   getTileContent({ date, view }) {
@@ -86,9 +98,10 @@ export default class App extends React.Component {
         {
           this.state.month_days[day] && this.state.month_days[day].map(date => {
             return (
-              <div>
-                <button className={day} id={date.id} onClick={this.deliteState}> ×</button>
+              <div className='box'>
                 <p>{date.text}</p>
+                <button className={day} id={date.id} onClick={this.deliteState}>削除</button>
+                <button className={day} id={date.id} onClick={this.editState}>編集</button>
                 <br />
               </div>
             )
@@ -112,6 +125,16 @@ export default class App extends React.Component {
     this.setState({ formvalues: { ...this.state.formvalues, content: value } })
   }
 
+  handleStart(event) {
+    const value = event.target.value
+    this.setState({ formvalues: { ...this.state.formvalues, start: value } })
+  }
+
+  handleEnd(event) {
+    const value = event.target.value
+    this.setState({ formvalues: { ...this.state.formvalues, end: value } })
+  }
+
   handleSubmit() {
     //モーダルの非表示
     this.setState({ isSubmitted: true })
@@ -125,28 +148,37 @@ export default class App extends React.Component {
 
     const index = dates.indexOf(date)
 
-    const sethat = this.getUniqueStr()
+    const random_id = this.getUniqueStr()
 
     if (index !== -1) {
       console.log('aru')
 
       if (this.state.formvalues.content !== "") {
-        copySate[date].push({ id: sethat, text: [this.state.formvalues.content] })
+        copySate[date].push({
+          id: random_id,
+          text: [this.state.formvalues.start + '～' + this.state.formvalues.end + this.state.formvalues.content],
+          backup: [this.state.formvalues.start, this.state.formvalues.end, this.state.formvalues.content]
+        })
         this.state.formvalues.content = ''
+        this.setState({ backups: '' })
       } else { }
-
     } else {
 
       console.log('nai')
-      console.log(this.state.month_days[20210202].map)
+      //console.log(this.state.month_days[20210202].map)
 
       if (this.state.formvalues.content !== "") {
         //newMonth_daysの保存値をセット
         copySate[date] = [
           //formvaluesはformの入力値
-          { text: [this.state.formvalues.content] }
+          {
+            id: random_id,
+            text: [this.state.formvalues.start + '～' + this.state.formvalues.end + this.state.formvalues.content],
+            backup: [this.state.formvalues.start, this.state.formvalues.end, this.state.formvalues.content]
+          }
         ]
         this.state.formvalues.content = ''
+        this.setState({ backups: '' })
       } else { }
     }
 
@@ -168,7 +200,7 @@ export default class App extends React.Component {
   }
 
   componentDidMount() {
-    if(localStorage.app){ // もし前回のデータがあったら、ローカルストレージの値を取得し、更新する
+    if (localStorage.app) { // もし前回のデータがあったら、ローカルストレージの値を取得し、更新する
       const saveDate = JSON.parse(localStorage.app);
       this.setState({
         month_days: saveDate.month_days,
@@ -180,6 +212,31 @@ export default class App extends React.Component {
   componentDidUpdate() {
     // ローカルストレージにステートの情報を保存
     localStorage.setItem('app', JSON.stringify(this.state));
+    // localStorage.clear()
+  }
+
+  first() {
+    if (this.state.backups[0] !== null) {
+      return this.state.backups[0]
+    } else {
+      return ''
+    }
+  }
+
+  second() {
+    if (this.state.backups[1] !== null) {
+      return this.state.backups[1]
+    } else {
+      return ''
+    }
+  }
+
+  third() {
+    if (this.state.backups[2] !== null) {
+      return this.state.backups[2]
+    } else {
+      return ''
+    }
   }
 
   render() {
@@ -196,10 +253,17 @@ export default class App extends React.Component {
               {/*年月日にして表示*/}
               <p>{this.formatdDate(this.state.selectedDate)}</p>
               <p>開始時間</p>
-              <input
-              />
-              <p>イベント内容</p>
-              <input
+              <div className='time-box'>
+                <input type='time' step="600" defaultValue={this.first()}
+                  onChange={this.handleStart.bind(this)}
+                />
+                <p>～</p>
+                <input type='time' step='600' defaultValue={this.second()}
+                  onChange={this.handleEnd.bind(this)}
+                />
+              </div>
+              <p>予定</p>
+              <input defaultValue={this.third()}
                 onChange={this.handleChange.bind(this)}
               />
               <input

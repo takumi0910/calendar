@@ -28,7 +28,26 @@
   color: #61dafb;
 }
 
-.react-calendar__tile{}
+.time-box{
+  display: flex;
+}
+
+.time-box input{
+  width: 400px;
+  height: 40px;
+}
+
+.event-box{
+  border: #282c34 1px solid;
+}
+
+.btn-box{
+  border: #282c34 1px solid;
+}
+.box{
+  border: #282c34 2px solid;
+}
+
 
 @keyframes App-logo-spin {
   from {

@@ -26,3 +26,7 @@ abbr{
 button{
   width: 300px;
 }
+
+.time-box{
+  display: flex;
+}
