@@ -32,21 +32,22 @@
   display: flex;
 }
 
+.react-calendar_tile{
+  height: 0.3vh;
+}
+
 .time-box input{
   width: 400px;
   height: 40px;
 }
 
-.event-box{
-  border: #282c34 1px solid;
+
+.box{
+  display: flex;
+  width: 100%;
 }
 
-.btn-box{
-  border: #282c34 1px solid;
-}
-.box{
-  border: #282c34 2px solid;
-}
+
 
 
 @keyframes App-logo-spin {

@@ -9,7 +9,7 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      date: new Date(2021, 2, 0),
+      date: new Date(2021, 3, 0),
       isSubmitted: true,
       //月のデータ
       month_days: {
@@ -99,9 +99,8 @@ export default class App extends React.Component {
           this.state.month_days[day] && this.state.month_days[day].map(date => {
             return (
               <div className='box'>
-                <p>{date.text}</p>
-                <button className={day} id={date.id} onClick={this.deliteState}>削除</button>
-                <button className={day} id={date.id} onClick={this.editState}>編集</button>
+                <button className={day} id={date.id} onClick={this.deliteState}>×</button>
+                <button className={day} id={date.id} onClick={this.editState}>{date.text}</button>
                 <br />
               </div>
             )
@@ -156,7 +155,7 @@ export default class App extends React.Component {
       if (this.state.formvalues.content !== "" && this.state.formvalues.start !== "" && this.state.formvalues.end !== "") {
         copySate[date].push({
           id: random_id,
-          text: [this.state.formvalues.start + '～' + this.state.formvalues.end + this.state.formvalues.content],
+          text: (this.state.formvalues.start + '～' + this.state.formvalues.end + '\n' + this.state.formvalues.content),
           backup: [this.state.formvalues.start, this.state.formvalues.end, this.state.formvalues.content]
         })
         this.state.formvalues.content = ''
@@ -164,7 +163,7 @@ export default class App extends React.Component {
 
       } else if (this.state.formvalues.content === "" && this.state.formvalues.start !== "" && this.state.formvalues.end !== "") {
         console.log(this.state.backups)
-        
+
         if (this.state.backups) {
           copySate[date].push({
             id: random_id,
@@ -174,10 +173,11 @@ export default class App extends React.Component {
           this.state.formvalues.content = ''
           this.setState({ backups: '' })
         }
+        console.log(this.state.backups)
 
       } else if (this.state.formvalues.content === "" && this.state.formvalues.start === "" && this.state.formvalues.end !== "") {
         console.log(this.state.backups)
-        
+
         if (this.state.backups) {
           copySate[date].push({
             id: random_id,
@@ -190,7 +190,7 @@ export default class App extends React.Component {
 
       } else if (this.state.formvalues.content !== "" && this.state.formvalues.start !== "" && this.state.formvalues.end === "") {
         console.log(this.state.backups)
-        
+
         if (this.state.backups) {
           copySate[date].push({
             id: random_id,
@@ -202,7 +202,7 @@ export default class App extends React.Component {
         }
       } else if (this.state.formvalues.content !== "" && this.state.formvalues.start === "" && this.state.formvalues.end !== "") {
         console.log(this.state.backups)
-        
+
         if (this.state.backups) {
           copySate[date].push({
             id: random_id,
@@ -215,7 +215,7 @@ export default class App extends React.Component {
 
       } else if (this.state.formvalues.content !== "" && this.state.formvalues.start === "" && this.state.formvalues.end === "") {
         console.log(this.state.backups)
-        
+
         if (this.state.backups) {
           copySate[date].push({
             id: random_id,
@@ -228,7 +228,7 @@ export default class App extends React.Component {
 
       } else if (this.state.formvalues.content === "" && this.state.formvalues.start !== "" && this.state.formvalues.end === "") {
         console.log(this.state.backups)
-        
+
         if (this.state.backups) {
           copySate[date].push({
             id: random_id,
@@ -240,7 +240,7 @@ export default class App extends React.Component {
         }
       } else if (this.state.formvalues.content === "" && this.state.formvalues.start === "" && this.state.formvalues.end === "") {
         console.log(this.state.backups)
-        
+
         if (this.state.backups) {
           copySate[date].push({
             id: random_id,
@@ -375,7 +375,6 @@ export default class App extends React.Component {
         <div>
           {contactForm}
         </div>
-        <Form />
       </Provider>
     );
   }
