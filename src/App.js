@@ -76,7 +76,7 @@ export default class App extends React.Component {
     }
     for (let i = 0; i < ids.length; i++) {
       if (ids[i] === key) {
-        console.log(this.state.month_days[day][i].backup[0], this.state.month_days[day][i].backup[1], this.state.month_days[day][i].backup[2])
+        //console.log(this.state.month_days[day][i].backup[0], this.state.month_days[day][i].backup[1], this.state.month_days[day][i].backup[2])
         this.setState({ backups: [this.state.month_days[day][i].backup[0], this.state.month_days[day][i].backup[1], this.state.month_days[day][i].backup[2]] })
         // console.log(this.state.backups[0], this.state.backups[1], this.state.backups[2])
         this.deliteState(e)
@@ -152,8 +152,8 @@ export default class App extends React.Component {
 
     if (index !== -1) {
       console.log('aru')
-
-      if (this.state.formvalues.content !== "") {
+      console.log(this.state.backups)
+      if (this.state.formvalues.content !== "" && this.state.formvalues.start !== "" && this.state.formvalues.end !== "") {
         copySate[date].push({
           id: random_id,
           text: [this.state.formvalues.start + '～' + this.state.formvalues.end + this.state.formvalues.content],
@@ -161,7 +161,96 @@ export default class App extends React.Component {
         })
         this.state.formvalues.content = ''
         this.setState({ backups: '' })
-      } else { }
+
+      } else if (this.state.formvalues.content === "" && this.state.formvalues.start !== "" && this.state.formvalues.end !== "") {
+        console.log(this.state.backups)
+        
+        if (this.state.backups) {
+          copySate[date].push({
+            id: random_id,
+            text: [this.state.formvalues.start + '～' + this.state.formvalues.end + this.state.backups[2]],
+            backup: [this.state.formvalues.start, this.state.formvalues.end, this.state.backups[2]]
+          })
+          this.state.formvalues.content = ''
+          this.setState({ backups: '' })
+        }
+
+      } else if (this.state.formvalues.content === "" && this.state.formvalues.start === "" && this.state.formvalues.end !== "") {
+        console.log(this.state.backups)
+        
+        if (this.state.backups) {
+          copySate[date].push({
+            id: random_id,
+            text: [this.state.backups[0] + '～' + this.state.formvalues.end + this.state.backups[2]],
+            backup: [this.state.backups[0], this.state.formvalues.end, this.state.backups[2]]
+          })
+          this.state.formvalues.content = ''
+          this.setState({ backups: '' })
+        }
+
+      } else if (this.state.formvalues.content !== "" && this.state.formvalues.start !== "" && this.state.formvalues.end === "") {
+        console.log(this.state.backups)
+        
+        if (this.state.backups) {
+          copySate[date].push({
+            id: random_id,
+            text: [this.state.formvalues.start + '～' + this.state.backups[1] + this.state.formvalues.content],
+            backup: [this.state.formvalues.start, this.state.backups[1], this.state.formvalues.content]
+          })
+          this.state.formvalues.content = ''
+          this.setState({ backups: '' })
+        }
+      } else if (this.state.formvalues.content !== "" && this.state.formvalues.start === "" && this.state.formvalues.end !== "") {
+        console.log(this.state.backups)
+        
+        if (this.state.backups) {
+          copySate[date].push({
+            id: random_id,
+            text: [this.state.backups[0] + '～' + this.state.formvalues.end + this.state.formvalues.content],
+            backup: [this.state.backups[0], this.state.formvalues.end, this.state.formvalues.content]
+          })
+          this.state.formvalues.content = ''
+          this.setState({ backups: '' })
+        }
+
+      } else if (this.state.formvalues.content !== "" && this.state.formvalues.start === "" && this.state.formvalues.end === "") {
+        console.log(this.state.backups)
+        
+        if (this.state.backups) {
+          copySate[date].push({
+            id: random_id,
+            text: [this.state.backups[0] + '～' + this.state.backups[1] + this.state.formvalues.content],
+            backup: [this.state.backups[0], this.state.backups[1], this.state.formvalues.content]
+          })
+          this.state.formvalues.content = ''
+          this.setState({ backups: '' })
+        }
+
+      } else if (this.state.formvalues.content === "" && this.state.formvalues.start !== "" && this.state.formvalues.end === "") {
+        console.log(this.state.backups)
+        
+        if (this.state.backups) {
+          copySate[date].push({
+            id: random_id,
+            text: [this.state.formvalues.start + '～' + this.state.backups[1] + this.state.backups[2]],
+            backup: [this.state.formvalues.start, this.state.backups[1], this.state.backups[2]]
+          })
+          this.state.formvalues.content = ''
+          this.setState({ backups: '' })
+        }
+      } else if (this.state.formvalues.content === "" && this.state.formvalues.start === "" && this.state.formvalues.end === "") {
+        console.log(this.state.backups)
+        
+        if (this.state.backups) {
+          copySate[date].push({
+            id: random_id,
+            text: [this.state.backups[0] + '～' + this.state.backups[1] + this.state.backups[2]],
+            backup: [this.state.backups[0], this.state.backups[1], this.state.backups[2]]
+          })
+          this.state.formvalues.content = ''
+          this.setState({ backups: '' })
+        }
+      }
     } else {
 
       console.log('nai')
