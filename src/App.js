@@ -1,3 +1,4 @@
+/* eslint no-unused-expressions: "off" */
 import React, { useEffect, useReducer } from 'react'
 import Calendar from 'react-calendar';
 import { Provider } from "react-redux"
@@ -35,7 +36,7 @@ export default class App extends React.Component {
         end: ''
       }
     };
-
+    //console.log(this.state.backups[0])
     this.getTileContent = this.getTileContent.bind(this);
   }
 
@@ -76,10 +77,12 @@ export default class App extends React.Component {
     }
     for (let i = 0; i < ids.length; i++) {
       if (ids[i] === key) {
-        console.log(this.state.month_days[day][i].backup[0], this.state.month_days[day][i].backup[1], this.state.month_days[day][i].backup[2])
         this.setState({ backups: [this.state.month_days[day][i].backup[0], this.state.month_days[day][i].backup[1], this.state.month_days[day][i].backup[2]] })
-        // console.log(this.state.backups[0], this.state.backups[1], this.state.backups[2])
-        this.deliteState(e)
+
+
+
+        //削除機能
+        //this.deliteState(e)
       }
     }
   }
@@ -121,11 +124,20 @@ export default class App extends React.Component {
   }
 
   handleChange(event) {
-    const value = event.target.value
+    let value = event.target.value
+    if (value) {
+      console.log('true')
+    }
+    else {
+      console.log('false')
+    }
+
     this.setState({ formvalues: { ...this.state.formvalues, content: value } })
+    //console.log(value)
   }
 
   handleStart(event) {
+    //console.log(this.state.formvalues.start)
     const value = event.target.value
     this.setState({ formvalues: { ...this.state.formvalues, start: value } })
   }
@@ -133,6 +145,12 @@ export default class App extends React.Component {
   handleEnd(event) {
     const value = event.target.value
     this.setState({ formvalues: { ...this.state.formvalues, end: value } })
+  }
+
+  changemind(){
+    if (this.state.formvalues.content === '') {
+      this.state.formvalues.content === 'fuck'
+    }
   }
 
   handleSubmit() {
@@ -152,7 +170,8 @@ export default class App extends React.Component {
 
     if (index !== -1) {
       console.log('aru')
-
+      //console.log(this.state.formvalues.start)
+      this.setState({ backups: null })
       if (this.state.formvalues.content !== "") {
         copySate[date].push({
           id: random_id,
@@ -160,11 +179,13 @@ export default class App extends React.Component {
           backup: [this.state.formvalues.start, this.state.formvalues.end, this.state.formvalues.content]
         })
         this.state.formvalues.content = ''
-        this.setState({ backups: '' })
-      } else { }
+      } else { 
+        this.setState({ formvalues: { ...this.state.formvalues, content: this.state.backups[2] } })
+        console.log(this.state.formvalues.content)
+      }
     } else {
-
       console.log('nai')
+      this.setState({ backups: null })
       //console.log(this.state.month_days[20210202].map)
 
       if (this.state.formvalues.content !== "") {
@@ -178,7 +199,6 @@ export default class App extends React.Component {
           }
         ]
         this.state.formvalues.content = ''
-        this.setState({ backups: '' })
       } else { }
     }
 
@@ -216,7 +236,8 @@ export default class App extends React.Component {
   }
 
   first() {
-    if (this.state.backups[0] !== null) {
+    if (this.state.backups !== null) {
+      //console.log(this.state.backups)
       return this.state.backups[0]
     } else {
       return ''
@@ -224,7 +245,7 @@ export default class App extends React.Component {
   }
 
   second() {
-    if (this.state.backups[1] !== null) {
+    if (this.state.backups !== null) {
       return this.state.backups[1]
     } else {
       return ''
@@ -232,8 +253,9 @@ export default class App extends React.Component {
   }
 
   third() {
-    if (this.state.backups[2] !== null) {
+    if (this.state.backups !== null) {
       return this.state.backups[2]
+
     } else {
       return ''
     }
@@ -264,7 +286,8 @@ export default class App extends React.Component {
               </div>
               <p>予定</p>
               <input defaultValue={this.third()}
-                onChange={this.handleChange.bind(this)}
+                onChange={this.handleChange.bind(this)
+                }
               />
               <input
                 type='submit'
