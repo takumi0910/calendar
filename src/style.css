@@ -37,8 +37,13 @@ button{
   margin: 0 auto;
 }
 
-.flex{
+.time-box{
   display: flex;
+}
+
+.time-box select{
+  appearance: none;
+  width: 20px;
 }
 
 .box button{

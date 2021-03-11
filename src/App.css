@@ -36,6 +36,10 @@
   height: 0.3vh;
 }
 
+.time-box{
+  display: flex;
+}
+
 .time-box input{
   width: 400px;
   height: 40px;
