@@ -8,27 +8,9 @@ class Modal extends React.Component {
     return date.getFullYear() + '年' + (date.getMonth() + 1) + '月' + date.getDate() + '日'
   }
 
-  first() {
-    if (this.props.backups[0] !== null) {
-      return this.props.backups[0]
-    } else {
-      return ''
-    }
-  }
-
-  second() {
-    if (this.props.backups[1] !== null) {
-      return this.props.backups[1]
-    } else {
-      return ''
-    }
-  }
-
-  third() {
-    if (this.props.backups[2] !== null) {
-      return this.props.backups[2]
-    } else {
-      return ''
+  defalutForm() {
+    if (this.props.backups[4] !== null) {
+      return this.props.backups[4]
     }
   }
 
@@ -39,17 +21,9 @@ class Modal extends React.Component {
         <form onSubmit={this.props.handleSubmit}>
           <div className='test'>
             <div className='content'>
-              {/*年月日にして表示*/}
               <p>{this.formatdDate(this.props.selectedDate)}</p>
               <p>開始時間</p>
               <div className='time-box'>
-                {/* <input type='time' step="600" defaultValue={this.first()}
-                  onChange={this.props.handleStart}
-                />
-                <p>～</p>
-                <input type='time' step='600' defaultValue={this.second()}
-                  onChange={this.props.handleEnd}
-                /> */}
                 {this.props.Start_timeHours()}
                 <p>:</p>
                 {this.props.Start_timeMinutes()}
@@ -63,7 +37,7 @@ class Modal extends React.Component {
               <p>予定</p>
               <input defaultValue=''
                 onChange={this.props.handleChange}
-                defaultValue={this.third()}
+                defaultValue={this.defalutForm()}
               />
               <input
                 type='submit'

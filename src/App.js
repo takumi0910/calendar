@@ -1,7 +1,22 @@
 import React from 'react'
 import Calendar from 'react-calendar';
 import Modal from "./components/modal"
+import { makeStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
 
+const Btn = () => {
+  return (
+    <Button variant="contained" color="primary">
+      Test
+    </Button>
+  );
+}
+
+const useStyles = makeStyles({
+  button: {
+    backgroundColor: 'green'
+  }
+});
 
 export default class App extends React.Component {
   constructor(props) {
@@ -13,13 +28,12 @@ export default class App extends React.Component {
       month_days: {},
       selectedDate: null,
       backups: '',
-      formvalues: {
-        content: '',
-      },
-      list: []
+      formvalues: '',
+      start_hour: '',
+      start_minitue: '',
+      end_hour: '',
+      end_minitue: ''
     };
-    this.getTileContent = this.getTileContent.bind(this);
-    this.handle = this.handle.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.Start_timeMinutes = this.Start_timeMinutes.bind(this);
@@ -67,64 +81,17 @@ export default class App extends React.Component {
     );
   }
 
-  //予定を編集する処理
-  editState = (e) => {
-    const day = e.target.className
-    const key = e.target.id
-    const ids = []
-    const id_copy = this.state.month_days[day]
-
-    for (let i = 0; i < this.state.month_days[day].length; i++) {
-      ids.push(id_copy[i].id)
-    }
-    for (let i = 0; i < ids.length; i++) {
-      if (ids[i] === key) {
-        //console.log(this.state.month_days[day][i].backup[0], this.state.month_days[day][i].backup[1], this.state.month_days[day][i].backup[2])
-        this.setState({ backups: [this.state.month_days[day][i].backup[0], this.state.month_days[day][i].backup[1], this.state.month_days[day][i].backup[2]] })
-        // console.log(this.state.backups[0], this.state.backups[1], this.state.backups[2])
-        this.deliteState(e)
-      }
-    }
-  }
-
-  //変化した際に値を取得します
-  handleChange(event) {
-    const value = event.target.value
-    this.setState({ formvalues: { ...this.state.formvalues, content: value } })
-    console.log(this.state.formvalues.content)
-  }
-
-  handle() {
-    this.setState({ isSubmitted: true })
-    console.log('shot');
-  }
-
+  //ランダムなidの作成
   getUniqueStr(myStrong) {
     var strong = 1000;
     if (myStrong) strong = myStrong;
     return new Date().getTime().toString(16) + Math.floor(strong * Math.random()).toString(16)
   }
 
-
-
-  //予定を消す処理
-  deliteState = (e) => {
-    const day = e.target.className
-    const key = e.target.id
-    const ids = []
-    const id_copy = this.state.month_days[day]
-
-    for (let i = 0; i < this.state.month_days[day].length; i++) {
-      ids.push(id_copy[i].id)
-      console.log(id_copy[i].id)
-    }
-
-    for (let i = 0; i < ids.length; i++) {
-      if (ids[i] === key) {
-        this.state.month_days[day].splice(i);
-        break;
-      }
-    }
+  //予定の値を設定
+  handleChange(event) {
+    const value = event.target.value
+    this.setState({ formvalues: value })
   }
 
   //予定が始まる時間を設定（1時間単位）
@@ -134,9 +101,8 @@ export default class App extends React.Component {
       options.push(<option value={i}>{i}</option>)
     }
     return (
-      <select
-        onChange={(e) => this.setState({ start_hour: e.target.value })}
-      >
+      <select defaultValue={this.state.backups[0]}
+        onChange={(e) => this.setState({ start_hour: e.target.value })} >
         {options}
       </select>
     )
@@ -151,7 +117,7 @@ export default class App extends React.Component {
       }
     }
     return (
-      <select
+      <select value={this.state.backups[1]}
         onChange={(e) => this.setState({ start_minitue: e.target.value })}>
         {options}
       </select>
@@ -167,11 +133,11 @@ export default class App extends React.Component {
       if (limited_hours == null) {
         options.push(<option value={i}>{i}</option>)
       } else if (i >= limited_hours) {
-        options.push(<option defaultValue='' value={i}>{i}</option>)
+        options.push(<option value={i}>{i}</option>)
       }
     }
     return (
-      <select
+      <select defaultValue={this.state.backups[2]}
         // defaultValue={this.setState({ end_hour: this.state.start_hour })}
         onChange={(e) => this.setState({ end_hour: e.target.value })}
       >
@@ -197,7 +163,7 @@ export default class App extends React.Component {
       }
     }
     return (
-      <select
+      <select defaultValue={this.state.backups[3]}
         onChange={(e) => this.setState({ end_minitue: e.target.value })}>
         {options}
       </select>
@@ -205,7 +171,7 @@ export default class App extends React.Component {
   }
 
 
-  //予定追加
+  //予定追加or予定編集処理
   handleSubmit() {
     //モーダルの非表示
     this.setState({ isSubmitted: true })
@@ -221,178 +187,126 @@ export default class App extends React.Component {
 
     const random_id = this.getUniqueStr()
 
-    if (this.state.end_hour == null) {
-      this.setState({ end_hour: this.state.start_hour })
-      console.log(this.state.end_hour)
+    //stateを変数に代入
+    let start_h = this.state.start_hour
+    let start_m = this.state.start_minitue
+    let end_h = this.state.end_hour
+    let end_m = this.state.end_minitue
+    let form = this.state.formvalues
+
+    //予定が始まる時間が空か確かめる（1時間単位）
+    if (start_h === '' && this.state.backups[0] !== undefined) {
+      start_h = this.state.backups[0]
+    } else if (start_h === '' && this.state.backups[0] == undefined) {
+      start_h = ''
     }
 
-    let start_time = this.state.start_hour + ':' + this.state.start_minitue
+    //予定が始まる時間が空か確かめる（1分単位）
+    if (start_m === '' && this.state.backups[1] !== undefined) {
+      start_m = this.state.backups[1]
+    } else if (start_m === '' && this.state.backups[1] == undefined) {
+      start_m = ''
+    }
 
-    let end_time = this.state.end_hour + ':' + this.state.end_minitue
+    //予定が終わる時間が空か確かめる（1時間単位）
+    if (end_h === '' && this.state.backups[2] !== undefined) {
+      end_h = this.state.backups[2]
+    } else if (end_h === '' && this.state.backups[2] == undefined) {
+      end_h = ''
+    }
 
-    if (index !== -1) {
+    //予定が終わる時間が空か確かめる（1分単位）
+    if (end_m === '' && this.state.backups[3] !== undefined) {
+      end_m = this.state.backups[3]
+    } else if (end_m === '' && this.state.backups[3] == undefined) {
+      end_m = ''
+    }
+
+    //入力内容が空か確かめる
+    if (form === '' && this.state.backups[4] !== '') {
+      form = this.state.backups[4]
+    } else if (form === '' && this.state.backups[4] == '') {
+      form = ''
+    }
+
+    //予定の開始時間と終了時間を出力する表示に変更
+    let start_time = start_h + ':' + start_m
+    let end_time = end_h + ':' + end_m
+
+    if (index !== -1 && start_time !== ':' || end_time !== ':') {
       copySate[date].push({
         id: random_id,
-        text: (start_time + '～' + end_time + '\n' + this.state.formvalues.content),
-        backup: [start_time, end_time, this.state.formvalues.content]
+        text: (start_time + '～' + end_time + '\n' + form),
+        backup: [start_h, start_m, end_h, end_m, form]
       })
-      this.setState({ start_hour: '' })
-      this.setState({ start_minute: '' })
-      this.setState({ end_hour: '' })
-      this.setState({ end_minitue: '' })
     } else {
-      if (this.state.formvalues.content !== "") {
+      if (this.state.formvalues !== "" && start_time !== ':' || end_time !== ':') {
         //newMonth_daysの保存値をセット
         copySate[date] = [
           //formvaluesはformの入力値
           {
             id: random_id,
-            text: [start_time + '～' + end_time + this.state.formvalues.content],
-            backup: [start_time, end_time, this.state.formvalues.content]
+            text: (start_time + '～' + end_time + '\n' + form),
+            backup: [start_h, start_m, end_h, end_m, form]
           }
         ]
-
-        this.state.formvalues.content = ''
-        this.setState({ start_hour: '' })
-        this.setState({ start_minitue: '' })
-        this.setState({ end_hour: '' })
-        this.setState({ end_minitue: '' })
-      } else { }
+      }
     }
-
     this.setState({ month_days: copySate })
-
+    this.setState({ backups: '' })
+    this.setState({ start_hour: '' })
+    this.setState({ start_minitue: '' })
+    this.setState({ end_hour: '' })
+    this.setState({ end_minitue: '' })
+    this.setState({ formvalues: '' })
+    // console.log(this.state.month_days[date][0].backup)
   }
 
-  //   if (index !== -1) {
-  //     console.log('aru')
-  //     console.log(this.state.backups)
-  //     if (this.state.formvalues.content !== "" && this.state.formvalues.start !== "" && this.state.formvalues.end !== "") {
-  //       copySate[date].push({
-  //         id: random_id,
-  //         text: (this.state.formvalues.start + '～' + this.state.formvalues.end + '\n' + this.state.formvalues.content),
-  //         backup: [this.state.formvalues.start, this.state.formvalues.end, this.state.formvalues.content]
-  //       })
-  //       this.state.formvalues.content = ''
-  //       this.setState({ backups: '' })
+  //予定を編集する処理
+  editState = (e) => {
+    const day = e.target.className
+    const key = e.target.id
+    const ids = []
+    const id_copy = this.state.month_days[day]
 
-  //     } else if (this.state.formvalues.content === "" && this.state.formvalues.start !== "" && this.state.formvalues.end !== "") {
-  //       console.log(this.state.backups)
+    for (let i = 0; i < this.state.month_days[day].length; i++) {
+      ids.push(id_copy[i].id)
+    }
+    for (let i = 0; i < ids.length; i++) {
+      if (ids[i] === key) {
+        this.setState({ backups: [this.state.month_days[day][i].backup[0], this.state.month_days[day][i].backup[1], this.state.month_days[day][i].backup[2], this.state.month_days[day][i].backup[3], this.state.month_days[day][i].backup[4],] })
+        this.deliteState(e)
+      }
+    }
+  }
 
-  //       if (this.state.backups) {
-  //         copySate[date].push({
-  //           id: random_id,
-  //           text: [this.state.formvalues.start + '～' + this.state.formvalues.end + this.state.backups[2]],
-  //           backup: [this.state.formvalues.start, this.state.formvalues.end, this.state.backups[2]]
-  //         })
-  //         this.state.formvalues.content = ''
-  //         this.setState({ backups: '' })
-  //       }
-  //       console.log(this.state.backups)
+  //予定を消す処理
+  deliteState = (e) => {
+    const day = e.target.className
+    const key = e.target.id
+    const ids = []
+    const id_copy = this.state.month_days[day]
+    this.setState({ start_hour: '' })
+    this.setState({ start_minitue: '' })
+    this.setState({ end_hour: '' })
+    this.setState({ end_minitue: '' })
+    this.setState({ formvalues: '' })
 
-  //     } else if (this.state.formvalues.content === "" && this.state.formvalues.start === "" && this.state.formvalues.end !== "") {
-  //       console.log(this.state.backups)
+    for (let i = 0; i < this.state.month_days[day].length; i++) {
+      ids.push(id_copy[i].id)
+    }
 
-  //       if (this.state.backups) {
-  //         copySate[date].push({
-  //           id: random_id,
-  //           text: [this.state.backups[0] + '～' + this.state.formvalues.end + this.state.backups[2]],
-  //           backup: [this.state.backups[0], this.state.formvalues.end, this.state.backups[2]]
-  //         })
-  //         this.state.formvalues.content = ''
-  //         this.setState({ backups: '' })
-  //       }
+    for (let i = 0; i < ids.length; i++) {
+      if (ids[i] === key) {
+        this.state.month_days[day].splice(i);
+        break;
+      }
+    }
+  }
 
-  //     } else if (this.state.formvalues.content !== "" && this.state.formvalues.start !== "" && this.state.formvalues.end === "") {
-  //       console.log(this.state.backups)
-
-  //       if (this.state.backups) {
-  //         copySate[date].push({
-  //           id: random_id,
-  //           text: [this.state.formvalues.start + '～' + this.state.backups[1] + this.state.formvalues.content],
-  //           backup: [this.state.formvalues.start, this.state.backups[1], this.state.formvalues.content]
-  //         })
-  //         this.state.formvalues.content = ''
-  //         this.setState({ backups: '' })
-  //       }
-  //     } else if (this.state.formvalues.content !== "" && this.state.formvalues.start === "" && this.state.formvalues.end !== "") {
-  //       console.log(this.state.backups)
-
-  //       if (this.state.backups) {
-  //         copySate[date].push({
-  //           id: random_id,
-  //           text: [this.state.backups[0] + '～' + this.state.formvalues.end + this.state.formvalues.content],
-  //           backup: [this.state.backups[0], this.state.formvalues.end, this.state.formvalues.content]
-  //         })
-  //         this.state.formvalues.content = ''
-  //         this.setState({ backups: '' })
-  //       }
-
-  //     } else if (this.state.formvalues.content !== "" && this.state.formvalues.start === "" && this.state.formvalues.end === "") {
-  //       console.log(this.state.backups)
-
-  //       if (this.state.backups) {
-  //         copySate[date].push({
-  //           id: random_id,
-  //           text: [this.state.backups[0] + '～' + this.state.backups[1] + this.state.formvalues.content],
-  //           backup: [this.state.backups[0], this.state.backups[1], this.state.formvalues.content]
-  //         })
-  //         this.state.formvalues.content = ''
-  //         this.setState({ backups: '' })
-  //       }
-
-  //     } else if (this.state.formvalues.content === "" && this.state.formvalues.start !== "" && this.state.formvalues.end === "") {
-  //       console.log(this.state.backups)
-
-  //       if (this.state.backups) {
-  //         copySate[date].push({
-  //           id: random_id,
-  //           text: [this.state.formvalues.start + '～' + this.state.backups[1] + this.state.backups[2]],
-  //           backup: [this.state.formvalues.start, this.state.backups[1], this.state.backups[2]]
-  //         })
-  //         this.state.formvalues.content = ''
-  //         this.setState({ backups: '' })
-  //       }
-  //     } else if (this.state.formvalues.content === "" && this.state.formvalues.start === "" && this.state.formvalues.end === "") {
-  //       console.log(this.state.backups)
-
-  //       if (this.state.backups) {
-  //         copySate[date].push({
-  //           id: random_id,
-  //           text: [this.state.backups[0] + '～' + this.state.backups[1] + this.state.backups[2]],
-  //           backup: [this.state.backups[0], this.state.backups[1], this.state.backups[2]]
-  //         })
-  //         this.state.formvalues.content = ''
-  //         this.setState({ backups: '' })
-  //       }
-  //     }
-  //   } else {
-
-  //     console.log('nai')
-  //     //console.log(this.state.month_days[20210202].map)
-
-  //     if (this.state.formvalues.content !== "") {
-  //       //newMonth_daysの保存値をセット
-  //       copySate[date] = [
-  //         //formvaluesはformの入力値
-  //         {
-  //           id: random_id,
-  //           text: [this.state.formvalues.start + '～' + this.state.formvalues.end + this.state.formvalues.content],
-  //           backup: [this.state.formvalues.start, this.state.formvalues.end, this.state.formvalues.content]
-  //         }
-  //       ]
-  //       this.state.formvalues.content = ''
-  //       this.setState({ backups: '' })
-  //     } else { }
-  //   }
-
-  //   this.setState({ month_days: copySate })
-
-
-  
   // もし前回のデータがあったら、ローカルストレージの値を取得し、更新する
   componentDidMount() {
-    if (localStorage.app) { 
+    if (localStorage.app) {
       const saveDate = JSON.parse(localStorage.app);
       this.setState({
         month_days: saveDate.month_days,
@@ -409,22 +323,21 @@ export default class App extends React.Component {
 
   render() {
     const title = ({ date, view }) => this.getTileContent({ date, view })
-    console.log(this.state)
-    // console.log(this.state.month_days[20210311][0].id)
     return (
-      <>
+      <React.Fragment>
         <Calendar
           locale="ja-JP"
           value={this.state.date}
           tileContent={title}
           onClickDay={this.handleSubmit_reverse.bind(this)}
+          backgroundColor='red'
         />
+        <Btn />
         <Modal
           isSubmitted={this.state.isSubmitted}
           selectedDate={this.state.selectedDate}
           formvalues={this.state.formvalues}
           backups={this.state.backups}
-          handle={this.handle}
           handleChange={this.handleChange}
           handleSubmit={this.handleSubmit}
           deliteState={this.deliteState}
@@ -435,7 +348,7 @@ export default class App extends React.Component {
         />
         <p>絶対にやること<br />メソッド名を正しく設定する
         </p>
-      </>
+      </React.Fragment>
     );
   }
 }
