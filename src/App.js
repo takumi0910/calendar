@@ -1,12 +1,13 @@
 import React from 'react'
 import Calendar from 'react-calendar';
 import Modal from "./components/modal"
+import { createMuiTheme } from '@material-ui/core/styles';
 
 export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      date: new Date(2021, 3, 0),
+      date: new Date(2021, 4, 0),
       isSubmitted: true,
       //月のデータ
       month_days: {},
@@ -88,7 +89,9 @@ export default class App extends React.Component {
     }
     return (
       <select defaultValue={this.state.backups[0]}
-        onChange={(e) => this.setState({ start_hour: e.target.value })} >
+        onChange={(e) => {
+          this.setState({ start_hour: e.target.value })
+        }} >
         {options}
       </select>
     )
@@ -104,7 +107,9 @@ export default class App extends React.Component {
     }
     return (
       <select defaultValue={this.state.backups[1]}
-        onChange={(e) => this.setState({ start_minitue: e.target.value })}>
+        onChange={(e) => {
+          this.setState({ start_minitue: e.target.value })
+        }}>
         {options}
       </select>
     )
@@ -113,11 +118,12 @@ export default class App extends React.Component {
   End_timeHours() {
     let options = []
     let limited_hours = this.state.start_hour
-
+    let shot = ''
     if (limited_hours === '' && this.state.backups[0] === undefined) {
       //処理なし⇒初めて予定を入れる際に時間の入力制限をかけたくないので必要なif文
     } else if (limited_hours === '' && this.state.backups[0] !== '') {
       limited_hours = this.state.backups[0]
+      // this.setState({end_hour: limited_hours})
     }
 
     for (var i = 0; i <= 23; i++) {
@@ -128,7 +134,9 @@ export default class App extends React.Component {
 
     return (
       <select defaultValue={this.state.backups[2]}
-        onChange={(e) => this.setState({ end_hour: e.target.value })}>
+        onChange={(e) => {
+          this.setState({ end_hour: e.target.value })
+        }}>
         {options}
       </select >
     )
@@ -149,27 +157,25 @@ export default class App extends React.Component {
     if (start_h !== '' && end_h === '') {
       decide = 'b'
     }//どっちも値自体は入っていて違う値 
-    else if (start_h !== end_h) {
+    else if (start_h !== '' && end_h !== '' && start_h !== end_h) {
       decide = 'c'
     } //どっちも値自体は入っていて同じ値 
-    else if (start_h === end_h) {
+    else if (start_h !== '' && end_h !== '' && start_h === end_h) {
       decide = 'd'
     }
 
-    if (this.state.backups[0] === '' && this.state.backups[0] === this.state.backups[2]) {
+    if (this.state.backups[0] !== undefined && this.state.backups[0] === this.state.backups[2]) {
       decide = 'e'
     }
 
-    // console.log(decide)
-    // console.log(this.state.backups[0])
-    // console.log(this.state.backups[2])
-    // console.log(this.state.backups[1])
+
 
 
     if (decide === 'b' || decide === 'd') {
       for (var i = 0; i <= 50; i++) {
         if (i % 10 == 0 && i >= limited_minutes) {
           options.push(<option value={i}>{i}</option>)
+          // this.setState({end_minitue: limited_minutes})
         }
       }
     } else if (decide === 'a' || decide === 'c') {
@@ -182,6 +188,7 @@ export default class App extends React.Component {
       for (var i = 0; i <= 50; i++) {
         if (i % 10 == 0 && i >= end_m) {
           options.push(<option value={i}>{i}</option>)
+          // this.setState({end_minitue: end_m})
         }
       }
     }
@@ -193,15 +200,6 @@ export default class App extends React.Component {
       </select>
     )
   }
-
-  // shot(a, b, c, d, e, f, g, h, i){
-  //   if (a === '' && b !== undefined) {
-  //     a = b
-  //   } else if (a === '' && b == undefined) {
-  //     a = ''
-  //   }
-  // }
-
 
   //予定追加or予定編集処理
   handleSubmit() {
@@ -226,6 +224,10 @@ export default class App extends React.Component {
     let end_h = this.state.end_hour
     let end_m = this.state.end_minitue
     let form = this.state.formvalues
+    let shot = Number(this.state.start_hour) - this.state.backups[0]
+    if (this.state.start_hour === '') {
+      shot = 0
+    }
 
     // 処理を関数化して引数でできないかな
     // 予定が始まる時間が空か確かめる（1時間単位）
@@ -244,7 +246,15 @@ export default class App extends React.Component {
 
     //予定が終わる時間が空か確かめる（1時間単位）
     if (end_h === '' && this.state.backups[2] !== undefined) {
-      end_h = this.state.backups[2]
+      if(this.state.start_hour > this.state.backups[2]){
+        end_h = this.state.start_hour
+      }else{
+        end_h = Number(this.state.backups[2]) + shot 
+        if(end_h > 23){
+          end_h = 23
+        }
+      }
+     
     } else if (end_h === '' && this.state.backups[2] == undefined && start_h !== '') {
       end_h = start_h
     }
@@ -269,17 +279,18 @@ export default class App extends React.Component {
     let end_time = end_h + ':' + end_m
 
     if (this.state.delite === 'd') { }
-    else if (this.state.formvalues === '' && this.state.backups[4] === '') { alert('予定を入力して下さい') }
-    if (index !== -1 && start_time !== ':' || end_time !== ':') {
+    else if (this.state.formvalues === '' && this.state.backups[4] === undefined) { alert('予定を入力して下さい') }
+    else if (index !== -1) {
       copySate[date].push({
         id: random_id,
         text: (start_time + '～' + end_time + '\n' + form),
         backup: [start_h, start_m, end_h, end_m, form]
       })
-    } else {
+    }
+    else {
       if (this.state.delite === 'd') { }
-      else if (this.state.formvalues === '' && this.state.backups[4] === '') { alert('予定を入力して下さい') }
-      if (this.state.formvalues !== "" && start_time !== ':' || end_time !== ':') {
+      else if (this.state.formvalues === '' && this.state.backups[4] === undefined) { alert('予定を入力して下さい') }
+      else if (this.state.formvalues !== "" && start_time !== ':' || end_time !== ':') {
         //newMonth_daysの保存値をセット
         copySate[date] = [
           //formvaluesはformの入力値
@@ -299,7 +310,6 @@ export default class App extends React.Component {
     this.setState({ end_minitue: '' })
     this.setState({ formvalues: '' })
     this.setState({ delite: '' })
-    // console.log(this.state.month_days[date][0].backup)
   }
 
   //予定を編集する処理
@@ -340,7 +350,7 @@ export default class App extends React.Component {
 
     for (let i = 0; i < ids.length; i++) {
       if (ids[i] === key) {
-        this.state.month_days[day].splice(i);
+        this.state.month_days[day].splice(i, 1);
         break;
       }
     }
@@ -365,6 +375,7 @@ export default class App extends React.Component {
 
   render() {
     const title = ({ date, view }) => this.getTileContent({ date, view })
+    console.log(this.state)
     return (
       <>
         <Calendar
@@ -372,6 +383,7 @@ export default class App extends React.Component {
           value={this.state.date}
           tileContent={title}
           onClickDay={this.handleSubmit_reverse.bind(this)}
+          theme
         />
         <Modal
           isSubmitted={this.state.isSubmitted}
