@@ -1,76 +1,101 @@
 .react-calendar{
-  background-color: whitesmoke;
+  border: 0.5px solid black;
 }
 
-abbr{
+abbr {
   display: block;
   text-align: center;
 }
 
-button{
+button {
   background-color: white;
-  border: #333333 solid 2px;
+  border: #333333 solid 1px;
 }
 
-.react-calendar__month-view__weekdays{
-  border: black;
+.react-calendar__month-view__days__day--neighboringMonth {
+  border: black solid 1px;
+  /* background-color: ; */
 }
 
-.react-calendar__month-view__days__day--neighboringMonth{
-  border: rgb(112, 112, 112) solid 2px;
-  background-color: rgb(155, 227, 255);
+.react-calendar__month-view__days__day--neighboringMonth abbr {
+  color: rgb(158, 158, 158);
 }
 
-.react-calendar__month-view__days__day--neighboringMonth abbr{
-  color: rgb(95, 95, 95);
-}
-
-.react-calendar__month-view__weekdays__weekday abbr{
+.react-calendar__month-view__weekdays__weekday abbr {
   text-decoration: none;
-  background-color:  rgb(155, 227, 255);
-  border: black 2px solid;
+  background-color: rgb(155, 227, 255);
+  border: black 1px solid;
 }
 
-.schedulle{
-  width: 500px;
-  height: 500px;
-  margin: 0 auto;
-}
 
-.time-box{
-  display: flex;
-}
-
-.time-box select{
-  appearance: none;
-  width: 20px;
-}
-
-.box button{
-  border: rgb(131, 131, 131) 1px solid;
-  background-color: orange;
+.react-calendar__month-view__weekdays :first-child  {
+  background-color: rgb(68, 68, 68);
   color: white;
 }
 
-.test{
-  /*　画面全体を覆う設定　*/
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background-color:rgba(0,0,0,0.5);
-  
-    /*　画面の中央に要素を表示させる設定　*/
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  
-  }
+.react-calendar__month-view__weekdays :nth-child(6) abbr {
+  background-color: rgb(0, 17, 255);
+}
 
-  .content{
-    z-index:2;
-    width:50%;
-    padding: 1em;
-    background:#fff;
-  }
+.react-calendar__month-view__weekdays :nth-child(7) abbr {
+  background-color: rgb(255, 0, 0);
+}
+
+.react-calendar .react-calendar__tile:nth-child(7n) {
+  color: red;
+}
+
+/* .react-calendar .react-calendar__tile:nth-child(6){
+  color: blue;
+} */
+
+
+/* モーダル部分のCSS */
+.modal-back {
+  /*　画面全体を覆う設定　*/
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  /*　画面の中央に要素を表示させる設定　*/
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal {
+  position: relative;
+  z-index: 2;
+  width: 50%;
+  padding: 1em;
+  background: #fff;
+}
+
+.time-box {
+  display: flex;
+}
+
+.time-box select {
+  appearance: none;
+  width: 20px;
+  margin: 0 1px;
+  color: black;
+}
+
+.plans button {
+  border: rgb(0, 0, 0) 1px solid;
+  background-color: rgb(155 227 255);
+  color: white;
+  font-size: 6px;
+}
+
+.close-button{
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  border: none;
+  font-size: 30px;
+  outline: none;
+}

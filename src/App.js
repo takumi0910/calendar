@@ -1,13 +1,11 @@
 import React from 'react'
 import Calendar from 'react-calendar';
 import Modal from "./components/modal"
-import { createMuiTheme } from '@material-ui/core/styles';
 
 export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      date: new Date(2021, 4, 0),
       isSubmitted: true,
       //月のデータ
       month_days: {},
@@ -18,14 +16,16 @@ export default class App extends React.Component {
       start_minitue: '',
       end_hour: '',
       end_minitue: '',
-      delite: '',
     };
+    // this.getTileClass = this.getTileClass.bind(this)
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.Start_timeMinutes = this.Start_timeMinutes.bind(this);
     this.Start_timeHours = this.Start_timeHours.bind(this);
     this.End_timeHours = this.End_timeHours.bind(this);
     this.End_timeMinutes = this.End_timeMinutes.bind(this);
+    this.closeModal = this.closeModal.bind(this);
+
   }
 
 
@@ -34,12 +34,31 @@ export default class App extends React.Component {
     return `${date.getFullYear()}${('0' + (date.getMonth() + 1)).slice(-2)}${('0' + date.getDate()).slice(-2)}`;
   }
 
+  // getTileClass({ date, view }) {
+  //   // 月表示のときのみ
+  //   if (view !== 'month') {
+  //     return '';
+  //   }
+  //   return (view === 'month' && date.getDay() === 5) ?
+  //     'saturday' : null
+  // }
+
   //日付ブロックをクリックした際の処理
-  handleSubmit_reverse(value) {
+  handleSubmit_reverse(value, e) {
     //モーダルの表示
-    this.setState({ isSubmitted: false })
+    console.log(e.target.title)
+    if (e.target.title === 'delite') {
+      this.setState({ isSubmitted: true })
+    } else {
+      this.setState({ isSubmitted: false })
+    }
+
     //選択した日の年月日を取得(valueの中には元からクリックされた日付が入ってる)
     this.setState({ selectedDate: value })
+  }
+
+  closeModal() {
+    this.setState({ isSubmitted: true })
   }
 
   //日付の内容を出力
@@ -56,8 +75,8 @@ export default class App extends React.Component {
         {
           this.state.month_days[day] && this.state.month_days[day].map(date => {
             return (
-              <div className='box'>
-                <button className={day} id={date.id} onClick={this.deliteState}>×</button>
+              <div className='plans'>
+                <button className={day} id={date.id} title='delite' onClick={this.deliteState}>×</button>
                 <button className={day} id={date.id} onClick={this.editState}>{date.text}</button>
                 <br />
               </div>
@@ -118,7 +137,7 @@ export default class App extends React.Component {
   End_timeHours() {
     let options = []
     let limited_hours = this.state.start_hour
-    let shot = ''
+    let end_h = this.state.end_hour
     if (limited_hours === '' && this.state.backups[0] === undefined) {
       //処理なし⇒初めて予定を入れる際に時間の入力制限をかけたくないので必要なif文
     } else if (limited_hours === '' && this.state.backups[0] !== '') {
@@ -126,17 +145,28 @@ export default class App extends React.Component {
       // this.setState({end_hour: limited_hours})
     }
 
+    if (end_h === '' && this.state.backups[2] !== undefined) {
+      end_h = this.state.backups[2]
+    }
+
     for (var i = 0; i <= 23; i++) {
       if (i >= limited_hours) {
-        options.push(<option value={i}>{i}</option>)
+        if (i !== end_h) {
+          options.push(<option value={i}>{i}</option>)
+        }
+        else if (i === end_h) {
+          options.push(<option value={i} selected>{i}</option>)
+        }
       }
     }
 
     return (
       <select defaultValue={this.state.backups[2]}
+        value={end_h}
         onChange={(e) => {
           this.setState({ end_hour: e.target.value })
         }}>
+
         {options}
       </select >
     )
@@ -149,46 +179,78 @@ export default class App extends React.Component {
     let options = []
     let limited_minutes = this.state.start_minitue
     let start_h = this.state.start_hour
+    let end_c = this.state.end_minitue
     let end_h = this.state.end_hour
     let end_m = this.state.backups[1]
+    let start_dh = this.state.backups[0]
+    let end_dh = this.state.backups[2]
     let decide = 'a'
 
-    //初めのhourで終わりが規定されてしまうから一緒
-    if (start_h !== '' && end_h === '') {
+
+    //全部空なので同じ値
+    if (start_h === '' && end_h === '' && start_dh === undefined && end_dh === undefined) {
       decide = 'b'
-    }//どっちも値自体は入っていて違う値 
-    else if (start_h !== '' && end_h !== '' && start_h !== end_h) {
+    }
+    //backups同士の値が同じ
+    else if (start_h === '' && end_h === '' && start_dh !== undefined && end_dh !== undefined && start_dh === end_dh) {
       decide = 'c'
-    } //どっちも値自体は入っていて同じ値 
-    else if (start_h !== '' && end_h !== '' && start_h === end_h) {
+    }
+    //end_hが空、ただstart_hとbackupが同じ
+    else if (start_h !== '' && end_h === '' && start_dh !== undefined && end_dh !== undefined && start_h === end_dh) {
       decide = 'd'
     }
-
-    if (this.state.backups[0] !== undefined && this.state.backups[0] === this.state.backups[2]) {
+    //start_hが空、ただend_hとbackupが同じ
+    else if (start_h === '' && end_h !== '' && start_dh !== undefined && end_dh !== undefined && start_dh === end_h) {
       decide = 'e'
+    }
+    else if (start_h !== '' && end_h === '') {
+      decide = 'f'
+      // console.log('b')
+    }//どっちも値自体は入っていて違う値 
+    else if (start_h !== '' && end_h !== '' && start_h !== end_h) {
+      decide = 'g'
+      // console.log('c')
+    } //どっちも値自体は入っていて同じ値 
+    else if (start_h !== '' && end_h !== '' && start_h === end_h) {
+      decide = 'h'
+      // console.log('d')
     }
 
 
+    console.log(decide)
 
 
-    if (decide === 'b' || decide === 'd') {
+    if (decide === 'b' || decide === 'f' || decide === 'h') {
       for (var i = 0; i <= 50; i++) {
         if (i % 10 == 0 && i >= limited_minutes) {
-          options.push(<option value={i}>{i}</option>)
-          // this.setState({end_minitue: limited_minutes})
+          if (i !== end_c) {
+            options.push(<option value={i}>{i}</option>)
+          }
+          else if (i === end_c) {
+            options.push(<option value={i} selected>{i}</option>)
+          }
         }
       }
-    } else if (decide === 'a' || decide === 'c') {
+    } else if (decide === 'a' || decide === 'g') {
       for (var i = 0; i <= 50; i++) {
         if (i % 10 == 0) {
-          options.push(<option value={i}>{i}</option>)
+          if (i !== end_c) {
+            options.push(<option value={i}>{i}</option>)
+          }
+          else if (i === end_c) {
+            options.push(<option value={i} selected>{i}</option>)
+          }
         }
       }
-    } else if (decide === 'e') {
+    } else if (decide === 'c' || decide === 'd' || decide === 'e') {
       for (var i = 0; i <= 50; i++) {
-        if (i % 10 == 0 && i >= end_m) {
-          options.push(<option value={i}>{i}</option>)
-          // this.setState({end_minitue: end_m})
+        if (i % 10 == 0 && i >= limited_minutes) {
+          if (i !== end_c) {
+            options.push(<option value={i}>{i}</option>)
+          }
+          else if (i === end_c) {
+            options.push(<option value={i} selected>{i}</option>)
+          }
         }
       }
     }
@@ -224,10 +286,6 @@ export default class App extends React.Component {
     let end_h = this.state.end_hour
     let end_m = this.state.end_minitue
     let form = this.state.formvalues
-    let shot = Number(this.state.start_hour) - this.state.backups[0]
-    if (this.state.start_hour === '') {
-      shot = 0
-    }
 
     // 処理を関数化して引数でできないかな
     // 予定が始まる時間が空か確かめる（1時間単位）
@@ -246,16 +304,17 @@ export default class App extends React.Component {
 
     //予定が終わる時間が空か確かめる（1時間単位）
     if (end_h === '' && this.state.backups[2] !== undefined) {
-      if(this.state.start_hour > this.state.backups[2]){
+      if (this.state.start_hour > this.state.backups[2]) {
         end_h = this.state.start_hour
-      }else{
-        end_h = Number(this.state.backups[2]) + shot 
-        if(end_h > 23){
-          end_h = 23
-        }
+      } else {
+        end_h = this.state.backups[2]
       }
-     
+
     } else if (end_h === '' && this.state.backups[2] == undefined && start_h !== '') {
+      end_h = start_h
+    }
+
+    if (end_h < start_h) {
       end_h = start_h
     }
 
@@ -273,6 +332,9 @@ export default class App extends React.Component {
       form = ''
     }
 
+    if (start_h === end_h && start_m > end_m) {
+      end_m = start_m
+    }
 
     //予定の開始時間と終了時間を出力する表示に変更
     let start_time = start_h + ':' + start_m
@@ -334,6 +396,7 @@ export default class App extends React.Component {
   //予定を消す処理
   deliteState = (e) => {
     const day = e.target.className
+    console.log(day)
     const key = e.target.id
     const ids = []
     const id_copy = this.state.month_days[day]
@@ -342,7 +405,7 @@ export default class App extends React.Component {
     this.setState({ end_hour: '' })
     this.setState({ end_minitue: '' })
     this.setState({ formvalues: '' })
-    this.setState({ delite: 'd' })
+
 
     for (let i = 0; i < this.state.month_days[day].length; i++) {
       ids.push(id_copy[i].id)
@@ -374,22 +437,24 @@ export default class App extends React.Component {
   }
 
   render() {
-    const title = ({ date, view }) => this.getTileContent({ date, view })
     console.log(this.state)
+    const title = ({ date, view }) => this.getTileContent({ date, view })
     return (
       <>
         <Calendar
           locale="ja-JP"
           value={this.state.date}
           tileContent={title}
+          tileClassName={this.getTileClass}
           onClickDay={this.handleSubmit_reverse.bind(this)}
-          theme
+          navigationAriaLabel='shot'
         />
         <Modal
           isSubmitted={this.state.isSubmitted}
           selectedDate={this.state.selectedDate}
           formvalues={this.state.formvalues}
           backups={this.state.backups}
+          closeModal={this.closeModal}
           handleChange={this.handleChange}
           handleSubmit={this.handleSubmit}
           deliteState={this.deliteState}
@@ -398,8 +463,6 @@ export default class App extends React.Component {
           End_timeHours={this.End_timeHours}
           End_timeMinutes={this.End_timeMinutes}
         />
-        <p>絶対にやること<br />メソッド名を正しく設定する
-        </p>
       </>
     );
   }
