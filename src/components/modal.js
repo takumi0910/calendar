@@ -2,13 +2,13 @@ import React from 'react'
 
 class Modal extends React.Component {
 
-  //選択した日付を年月日の形にし、値を返す
-  formatdDate(d) {
+  //モーダル上部に予定を入れようとしている日付を表示
+  formatDate(d) {
     const date = new Date(d)
     return date.getFullYear() + '年' + (date.getMonth() + 1) + '月' + date.getDate() + '日'
   }
 
-  defalutForm() {
+  defaultForm() {
     if (this.props.backups[4] !== null) {
       return this.props.backups[4]
     }
@@ -24,12 +24,12 @@ class Modal extends React.Component {
               <button className='close-button'
                 onClick={this.props.closeModal}
               >×</button>
-              <p>{this.formatdDate(this.props.selectedDate)}</p>
+              <p>{this.formatDate(this.props.selectedDate)}</p>
               <p className='plans-time'>予定時間</p>
               <div className='time-box'>
                 {this.props.Start_timeHours()}
                 <p>:</p>
-                {this.props.Start_timeMinutes()}
+                {this.props.Start_timeMinutes()}  
                 <p>～</p>
                 {this.props.End_timeHours()}
                 <p>:</p>
@@ -38,7 +38,7 @@ class Modal extends React.Component {
               <p className='plans-content'>予定の内容</p>
               <input defaultValue=''
                 onChange={this.props.handleChange}
-                defaultValue={this.defalutForm()}
+                defaultValue={this.defaultForm()}
               />
               <input
                 className='submit-btn'
