@@ -8,7 +8,7 @@ export default class App extends React.Component {
     this.state = {
       isSubmitted: true,
       //月のデータ
-      month_days: {},
+      month_days: '',
       selectedDate: null,
       backups: '',
       formvalues: '',
@@ -34,19 +34,10 @@ export default class App extends React.Component {
     return `${date.getFullYear()}${('0' + (date.getMonth() + 1)).slice(-2)}${('0' + date.getDate()).slice(-2)}`;
   }
 
-  // getTileClass({ date, view }) {
-  //   // 月表示のときのみ
-  //   if (view !== 'month') {
-  //     return '';
-  //   }
-  //   return (view === 'month' && date.getDay() === 5) ?
-  //     'saturday' : null
-  // }
-
   //日付ブロックをクリックした際の処理
   handleSubmit_reverse(value, e) {
     //モーダルの表示
-    console.log(e.target.title)
+
     if (e.target.title === 'delite') {
       this.setState({ isSubmitted: true })
     } else {
@@ -180,11 +171,21 @@ export default class App extends React.Component {
     let limited_minutes = this.state.start_minitue
     let start_h = this.state.start_hour
     let end_c = this.state.end_minitue
+    let end_s = this.state.backups[3]
     let end_h = this.state.end_hour
     let end_m = this.state.backups[1]
     let start_dh = this.state.backups[0]
     let end_dh = this.state.backups[2]
     let decide = 'a'
+
+    if (limited_minutes === '' && end_m !== undefined) {
+      limited_minutes = end_m
+      console.log('change')
+    }
+
+    if (end_c === '' && end_s !== undefined) {
+      end_c = end_s
+    }
 
 
     //全部空なので同じ値
@@ -223,33 +224,41 @@ export default class App extends React.Component {
     if (decide === 'b' || decide === 'f' || decide === 'h') {
       for (var i = 0; i <= 50; i++) {
         if (i % 10 == 0 && i >= limited_minutes) {
-          if (i !== end_c) {
+          if (i != end_c) {
             options.push(<option value={i}>{i}</option>)
+            console.log('shot')
+            console.log(i)
+            console.log(end_c)
           }
-          else if (i === end_c) {
+          else {
             options.push(<option value={i} selected>{i}</option>)
+            console.log('hat')
           }
         }
       }
     } else if (decide === 'a' || decide === 'g') {
       for (var i = 0; i <= 50; i++) {
         if (i % 10 == 0) {
-          if (i !== end_c) {
+          if (i != end_c) {
             options.push(<option value={i}>{i}</option>)
+            console.log('shot')
           }
-          else if (i === end_c) {
+          else {
             options.push(<option value={i} selected>{i}</option>)
+            console.log('hat')
           }
         }
       }
     } else if (decide === 'c' || decide === 'd' || decide === 'e') {
       for (var i = 0; i <= 50; i++) {
         if (i % 10 == 0 && i >= limited_minutes) {
-          if (i !== end_c) {
+          if (i != end_c) {
             options.push(<option value={i}>{i}</option>)
+            console.log('shot')
           }
-          else if (i === end_c) {
+          else {
             options.push(<option value={i} selected>{i}</option>)
+            console.log('hat')
           }
         }
       }
@@ -333,6 +342,7 @@ export default class App extends React.Component {
     }
 
     if (start_h === end_h && start_m > end_m) {
+      console.log('hothot')
       end_m = start_m
     }
 
