@@ -41,7 +41,7 @@ button {
   background-color: rgb(255, 0, 0);
 }
 
-.react-calendar .react-calendar__tile:nth-child(7n) {
+.react-calendar__tile:nth-child(7n) {
   color: red;
 }
 
@@ -71,6 +71,8 @@ button {
   width: 50%;
   padding: 1em;
   background: #fff;
+  border-radius: 10px;
+  border: coral 2px solid;
 }
 
 .time-box {
@@ -99,3 +101,12 @@ button {
   font-size: 30px;
   outline: none;
 }
+
+/* .plans-time{
+  text-decoration: underline blue 10px solid;
+  width: 70px;
+} */
+
+/* .submit-btn{
+  background-color: ;
+} */
