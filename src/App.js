@@ -246,8 +246,7 @@ export default class App extends React.Component {
     this.setState({ isSubmitted: true })
 
     let date = this.getFormatDate(new Date(this.state.selectedDate))
-    date = Number(date)
-
+   
     const copySate = this.state.month_days
 
     const dates = Object.keys(copySate)
@@ -255,6 +254,9 @@ export default class App extends React.Component {
     const index = dates.indexOf(date)
 
     const random_id = this.getUniqueStr()
+
+    console.log(index)
+    date = Number(date)
 
 
     //stateを変数に代入
@@ -327,8 +329,6 @@ export default class App extends React.Component {
       })
     }
     else if (form && start_time !== ':' || end_time !== ':') {
-      console.log(date)
-      console.log(typeof date);
       copySate[date] = [
         {
           id: random_id,
