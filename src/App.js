@@ -35,15 +35,11 @@ export default class App extends React.Component {
 
   //日付ブロックをクリックした時の処理
   openModal(value, e) {
-    //×ボタンを押された際の処理
     if (e.target.title === 'delite') {
       this.setState({ isSubmitted: true })
     } else {
-      //×ボタン以外の日付ブロックをクリックした際の処理
       this.setState({ isSubmitted: false })
     }
-
-    //選択した日の年月日を取得
     this.setState({ selectedDate: value })
   }
 
@@ -67,7 +63,7 @@ export default class App extends React.Component {
           this.state.month_days[day] && this.state.month_days[day].map(date => {
             return (
               <div className='plans'>
-                <button className={day} id={date.id} title='delete' onClick={this.deleteState}>×</button>
+                <button className={day} id={date.id} title='delite' onClick={this.deleteState}>×</button>
                 <button className={day} id={date.id} onClick={this.editState}>{date.text}</button>
                 <br />
               </div>
@@ -130,19 +126,23 @@ export default class App extends React.Component {
     let options = []
     let limited_h = this.state.start_hour
     let end_h = this.state.end_hour
+    let end_dh = this.state.backups[2]
 
     if (limited_h === '' && this.state.backups[0] === undefined) {
-      //
     } else if (limited_h === '' && this.state.backups[0] !== '') {
       limited_h = this.state.backups[0]
     }
 
+    if(end_h === '' && end_dh !== undefined){
+      end_h = end_dh
+    }
+
     for (var i = 0; i <= 23; i++) {
       if (i >= limited_h) {
-        if (i !== end_h) {
+        if (i != end_h) {
           options.push(<option value={i}>{i}</option>)
         }
-        else if (i === end_h) {
+        else if (i == end_h) {
           options.push(<option value={i} selected>{i}</option>)
         }
       }
@@ -163,69 +163,53 @@ export default class App extends React.Component {
   //予定が終わる時間を設定（1分単位）
   End_timeMinutes() {
     let options = []
-    let limited_minutes = this.state.start_minute
     let start_h = this.state.start_hour
-    let end_c = this.state.end_minute
-    let end_s = this.state.backups[3]
+    let end_m = this.state.end_minute
     let end_h = this.state.end_hour
-    let end_m = this.state.backups[1]
     let start_dh = this.state.backups[0]
+    let start_dm = this.state.backups[1]
     let end_dh = this.state.backups[2]
-    let decide = 'a'
+    let limited_start = ''
+    let limited_end = ''
+    let limited_minutes = this.state.start_minute
 
-    if (limited_minutes === '' && end_m !== undefined) {
-      limited_minutes = end_m
-    }
-
-    if (end_c === '' && end_s !== undefined) {
-      end_c = end_s
-    }
-
-
-    //全部空なので同じ値
-    if (start_h === '' && end_h === '' && start_dh === undefined && end_dh === undefined) {
-      decide = 'b'
-    }
-    //backups同士の値が同じ
-    else if (start_h === '' && end_h === '' && start_dh !== undefined && end_dh !== undefined && start_dh === end_dh) {
-      decide = 'c'
-    }
-    //end_hが空、ただstart_hとbackupが同じ
-    else if (start_h !== '' && end_h === '' && start_dh !== undefined && end_dh !== undefined && start_h === end_dh) {
-      decide = 'd'
-    }
-    //start_hが空、ただend_hとbackupが同じ
-    else if (start_h === '' && end_h !== '' && start_dh !== undefined && end_dh !== undefined && start_dh === end_h) {
-      decide = 'e'
-    }
-    else if (start_h !== '' && end_h === '') {
-      decide = 'f'
-    }//どっちも値自体は入っていて違う値 
-    else if (start_h !== '' && end_h !== '' && start_h !== end_h) {
-      decide = 'g'
-    } //どっちも値自体は入っていて同じ値 
-    else if (start_h !== '' && end_h !== '' && start_h === end_h) {
-      decide = 'h'
+    //分数制限の値の算出
+    if (limited_minutes === undefined && start_dm !== '') {
+      limited_minutes = start_dm
+    } else if (limited_minutes === undefined && start_dm === '') {
+      limited_minutes = 0
     }
 
+    //初めの時間を取得
+    if (start_h === '' && start_dh === undefined) {
+      limited_start = ''
+    } else if (start_h === '' && start_dh !== undefined) {
+      limited_start = start_dh
+    } else {
+      limited_start = start_h
+    }
 
-    if (decide === 'b' || decide === 'f' || decide === 'h') {
-      for (var i = 0; i <= 50; i++) {
-        if (i % 10 == 0 && i >= limited_minutes) {
-          let j = ('0' + i).slice(-2);
-          if (i != end_c) {
-            options.push(<option value={j}>{j}</option>)
-          }
-          else {
-            options.push(<option value={j} selected>{j}</option>)
-          }
-        }
-      }
-    } else if (decide === 'a' || decide === 'g') {
+    //終わりの時間を取得
+    if (end_h === '' && end_dh === undefined && limited_start === '') {
+      limited_end = ''
+    } else if (end_h === '' && end_dh !== '' && limited_start === '') {
+      limited_end = end_dh
+    } else if (end_h === '' && limited_start === start_dh) {
+      limited_end = start_dh
+    } else if (end_h === '' && start_h !== '') {
+      limited_end = start_h
+    } else if (end_h !== '' && start_h > end_h) {
+      limited_end = limited_start
+    } else if (end_h !== '') {
+      limited_end = end_h
+    }
+
+    if (limited_start !== limited_end) {
+      console.log('no limit')
       for (var i = 0; i <= 50; i++) {
         if (i % 10 == 0) {
           let j = ('0' + i).slice(-2);
-          if (i != end_c) {
+          if (i != end_m) {
             options.push(<option value={j}>{j}</option>)
           }
           else {
@@ -233,11 +217,12 @@ export default class App extends React.Component {
           }
         }
       }
-    } else if (decide === 'c' || decide === 'd' || decide === 'e') {
+    } else if (limited_start === limited_end) {
+      console.log('limit')
       for (var i = 0; i <= 50; i++) {
         if (i % 10 == 0 && i >= limited_minutes) {
           let j = ('0' + i).slice(-2);
-          if (i != end_c) {
+          if (i != end_m) {
             options.push(<option value={j}>{j}</option>)
           }
           else {
@@ -277,7 +262,6 @@ export default class App extends React.Component {
     let end_m = this.state.end_minute
     let form = this.state.formvalues
 
-    // 処理を関数化して引数でできないかな
     // 予定が始まる時間が空か確かめる（1時間単位）
     if (start_h === '' && this.state.backups[0] !== undefined) {
       start_h = this.state.backups[0]
@@ -299,12 +283,7 @@ export default class App extends React.Component {
       } else {
         end_h = this.state.backups[2]
       }
-
     } else if (end_h === '' && this.state.backups[2] == undefined && start_h !== '') {
-      end_h = start_h
-    }
-
-    if (end_h < start_h) {
       end_h = start_h
     }
 
@@ -315,22 +294,23 @@ export default class App extends React.Component {
       end_m = start_m
     }
 
-    //入力内容が空か確かめる
+    //予定内容が空か確かめる
     if (form === '' && this.state.backups[4] !== '') {
       form = this.state.backups[4]
     } else if (form === '' && this.state.backups[4] == '') {
       form = ''
     }
 
+    //入力処理の間違いを防ぐ
+    if (end_h < start_h) {
+      end_h = start_h
+    }
+
     if (start_h === end_h && start_m > end_m) {
       end_m = start_m
     }
 
-
-
-
     //ここから下はhandleSubmit短縮不能
-
     //予定の開始時間と終了時間を出力する表示に変更
     let start_time = start_h + ':' + start_m
     let end_time = end_h + ':' + end_m
@@ -427,7 +407,6 @@ export default class App extends React.Component {
 
 
   render() {
-    console.log(this.state)
     const title = ({ date, view }) => this.getTileContent({ date, view })
     return (
       <>
