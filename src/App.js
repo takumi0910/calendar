@@ -1,6 +1,6 @@
 import React from 'react'
 import Calendar from 'react-calendar';
-import Modal from "./components/Modal"
+import Modal from "./components/modal"
 
 export default class App extends React.Component {
   constructor(props) {

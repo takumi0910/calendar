@@ -112,6 +112,10 @@ button {
   display: flex;
 }
 
+.plans > button{
+  margin-bottom: 3px;
+}
+
 .plans-time, .plans-content {
   margin-bottom: 5px;
   margin-top: 25px;
