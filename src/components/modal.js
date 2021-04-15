@@ -41,7 +41,7 @@ class Modal extends React.Component {
                   {this.props.End_timeMinutes()}
                 </div>
                 <p className='plans-content'>予定の内容</p>
-                <input defaultValue=''
+                <input defaultValue=''　required
                   onChange={this.props.handleChange}
                   defaultValue={this.defaultForm()}
                 />

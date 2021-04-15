@@ -103,7 +103,7 @@ button {
 
 .time-box select {
   appearance: none;
-  width: 20px;
+  padding: 0 3px;
   margin: 0 1px;
   color: black;
 }
