@@ -29,19 +29,25 @@ class Modal extends React.Component {
                 <div className='add-plans'>予定登録</div>
               </div>
               <div className='modal-main'>
-                <p>選択した日 : {this.formatDate(this.props.selectedDate)}</p>
-                <p className='plans-time'>予定時間</p>
-                <div className='time-box'>
-                  {this.props.Start_timeHours()}
-                  <p>:</p>
-                  {this.props.Start_timeMinutes()}
-                  <p>～</p>
-                  {this.props.End_timeHours()}
-                  <p>:</p>
-                  {this.props.End_timeMinutes()}
+                <div className='time'>
+                  <p>選択した日 : {this.formatDate(this.props.selectedDate)}</p>
+                  <p className='plans-time'>予定時間</p>
+                  <div className='time-box'>
+                    {this.props.Start_timeHours()}
+                    <p>:</p>
+                    {this.props.Start_timeMinutes()}
+                    <p>～</p>
+                    {this.props.End_timeHours()}
+                    <p>:</p>
+                    {this.props.End_timeMinutes()}
+                  </div>
+                  <div className='select-color'>
+                    <p>予定を入れる際の背景色</p>
+                    <div>{this.props.tileColor()}</div>
+                  </div>
                 </div>
-                <p className='plans-content'>予定の内容</p>
-                <input defaultValue=''
+                <p className='plan-contents'>予定の内容</p>
+                <input defaultValue='' required
                   onChange={this.props.handleChange}
                   defaultValue={this.defaultForm()}
                 />
@@ -59,7 +65,7 @@ class Modal extends React.Component {
     return (
       <div>
         {contactForm}
-      </div>
+      </div >
     );
   }
 }

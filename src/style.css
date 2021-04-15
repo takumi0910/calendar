@@ -81,7 +81,6 @@ button {
 .modal-top .add-plans {
   font-weight: 500;
   font-family: system-ui;
-
 }
 
 .modal-main {
@@ -103,8 +102,7 @@ button {
 
 .time-box select {
   appearance: none;
-  width: 20px;
-  margin: 0 1px;
+  padding: 0 3px;
   color: black;
 }
 
@@ -112,7 +110,7 @@ button {
   display: flex;
 }
 
-.plans > button{
+.plans>button {
   margin-bottom: 3px;
 }
 
@@ -139,15 +137,25 @@ button {
   color: #6e6e6e;
 }
 
-/* .plans-time{
-  text-decoration: underline blue 10px solid;
-  width: 70px;
-} */
-
 .submit-btn {
   background-color: rgb(113 180 255);
   border-radius: 10px;
   border: none;
   color: white;
   margin-left: 5px;
+}
+
+.input-plan {
+  position: relative;
+  display: flex;
+}
+
+.plan-contents{
+  margin-bottom: 0px;
+  margin-top: 20px;
+}
+
+.select-color p {
+  margin-bottom: 0px;
+  margin-top: 20px;
 }
