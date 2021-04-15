@@ -19,32 +19,38 @@ class Modal extends React.Component {
     if (this.props.isSubmitted === false) {
       contactForm = (
         <form onSubmit={this.props.handleSubmit}>
-          <div className='modal-back'>
-            <div className='modal'>
-              <button className='close-button'
-                onClick={this.props.closeModal}
-              >×</button>
-              <p>{this.formatDate(this.props.selectedDate)}</p>
-              <p className='plans-time'>予定時間</p>
-              <div className='time-box'>
-                {this.props.Start_timeHours()}
-                <p>:</p>
-                {this.props.Start_timeMinutes()}  
-                <p>～</p>
-                {this.props.End_timeHours()}
-                <p>:</p>
-                {this.props.End_timeMinutes()}
+          <div className='modal-back'
+            onClick={this.props.keepModal}>
+            <div className='modal '>
+              <div className='modal-top'>
+                <button className='close-button'
+                  onClick={this.props.closeModal}
+                >×</button>
+                <div className='add-plans'>予定登録</div>
               </div>
-              <p className='plans-content'>予定の内容</p>
-              <input defaultValue=''
-                onChange={this.props.handleChange}
-                defaultValue={this.defaultForm()}
-              />
-              <input
-                className='submit-btn'
-                type='submit'
-                value='登録'
-              />
+              <div className='modal-main'>
+                <p>選択した日 : {this.formatDate(this.props.selectedDate)}</p>
+                <p className='plans-time'>予定時間</p>
+                <div className='time-box'>
+                  {this.props.Start_timeHours()}
+                  <p>:</p>
+                  {this.props.Start_timeMinutes()}
+                  <p>～</p>
+                  {this.props.End_timeHours()}
+                  <p>:</p>
+                  {this.props.End_timeMinutes()}
+                </div>
+                <p className='plans-content'>予定の内容</p>
+                <input defaultValue=''
+                  onChange={this.props.handleChange}
+                  defaultValue={this.defaultForm()}
+                />
+                <input
+                  className='submit-btn'
+                  type='submit'
+                  value='登録'
+                />
+              </div>
             </div>
           </div>
         </form >

@@ -1,4 +1,4 @@
-.react-calendar{
+.react-calendar {
   border: 0.5px solid black;
 }
 
@@ -27,8 +27,7 @@ button {
   border: black 1px solid;
 }
 
-
-.react-calendar__month-view__weekdays :first-child  {
+.react-calendar__month-view__weekdays :first-child {
   background-color: rgb(68, 68, 68);
   color: white;
 }
@@ -49,8 +48,8 @@ button {
   color: blue;
 } */
 
-
 /* モーダル部分のCSS */
+
 .modal-back {
   /*　画面全体を覆う設定　*/
   position: fixed;
@@ -63,16 +62,39 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
+  color: #6e6e6e;
 }
 
 .modal {
   position: relative;
   z-index: 2;
   width: 50%;
-  padding: 1em;
   background: #fff;
   border-radius: 10px;
-  border: coral 2px solid;
+  border: none;
+}
+
+.modal-top {
+  padding: 10px;
+}
+
+.modal-top .add-plans {
+  font-weight: 500;
+  font-family: system-ui;
+
+}
+
+.modal-main {
+  background-color: #dbf6ff;
+  padding: 10px 20px;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+.add-plans {
+  width: 100%;
+  text-align: center;
+  font-size: large;
 }
 
 .time-box {
@@ -86,8 +108,13 @@ button {
   color: black;
 }
 
-.plans{
+.plans {
   display: flex;
+}
+
+.plans-time, .plans-content {
+  margin-bottom: 5px;
+  margin-top: 25px;
 }
 
 .plans button {
@@ -97,13 +124,15 @@ button {
   font-size: 6px;
 }
 
-.close-button{
+.close-button {
   position: absolute;
-  top: 20px;
+  top: 0px;
   right: 30px;
   border: none;
-  font-size: 30px;
+  font-size: 40px;
   outline: none;
+  background-color: transparent;
+  color: #6e6e6e;
 }
 
 /* .plans-time{
@@ -111,6 +140,10 @@ button {
   width: 70px;
 } */
 
-.submit-btn{
-  background-color: rgb(178 178 178)
+.submit-btn {
+  background-color: rgb(113 180 255);
+  border-radius: 10px;
+  border: none;
+  color: white;
+  margin-left: 5px;
 }

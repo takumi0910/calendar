@@ -24,9 +24,8 @@ export default class App extends React.Component {
     this.End_timeHours = this.End_timeHours.bind(this);
     this.End_timeMinutes = this.End_timeMinutes.bind(this);
     this.closeModal = this.closeModal.bind(this);
-
+    this.keepModal = this.keepModal.bind(this);
   }
-
 
   // state の日付と同じ表記に変換
   getFormatDate(date) {
@@ -48,6 +47,19 @@ export default class App extends React.Component {
     this.setState({ isSubmitted: true })
   }
 
+  keepModal(e) {
+    let modal_class = e.target.className
+    if (modal_class === 'modal-back')
+      this.setState({ isSubmitted: true })
+  }
+
+  editModal(e) {
+    let modal_class = e.target.meta
+    if (modal_class === 'meta') {
+
+    }
+  }
+
   //日付の内容を出力
   getTileContent({ date, view }) {
     // 月表示のときのみ
@@ -64,7 +76,7 @@ export default class App extends React.Component {
             return (
               <div className='plans'>
                 <button className={day} id={date.id} title='delete' onClick={this.deleteState}>×</button>
-                <button className={day} id={date.id} onClick={this.editState}>{date.text}</button>
+                <button className={day} id={date.id} meta='edit' onClick={this.editState}>{date.text}</button>
                 <br />
               </div>
             )
@@ -137,7 +149,6 @@ export default class App extends React.Component {
       end_h = end_dh
     }
 
-    //疑惑の判定
     for (var i = 0; i <= 23; i++) {
       if (i >= limited_h) {
         if (i != end_h) {
@@ -158,8 +169,6 @@ export default class App extends React.Component {
       </select >
     )
   }
-
-
 
   //予定が終わる時間を設定（1分単位）
   End_timeMinutes() {
@@ -206,7 +215,6 @@ export default class App extends React.Component {
     }
 
     if (limited_start !== limited_end) {
-      console.log('no limit')
       for (var i = 0; i <= 50; i++) {
         if (i % 10 == 0) {
           let j = ('0' + i).slice(-2);
@@ -219,7 +227,6 @@ export default class App extends React.Component {
         }
       }
     } else if (limited_start === limited_end) {
-      console.log('limit')
       for (var i = 0; i <= 50; i++) {
         if (i % 10 == 0 && i >= limited_minutes) {
           let j = ('0' + i).slice(-2);
@@ -246,7 +253,7 @@ export default class App extends React.Component {
     this.setState({ isSubmitted: true })
 
     let date = this.getFormatDate(new Date(this.state.selectedDate))
-   
+
     const copySate = this.state.month_days
 
     const dates = Object.keys(copySate)
@@ -255,7 +262,6 @@ export default class App extends React.Component {
 
     const random_id = this.getUniqueStr()
 
-    console.log(index)
     date = Number(date)
 
 
@@ -395,12 +401,11 @@ export default class App extends React.Component {
   componentDidUpdate() {
     // ローカルストレージにステートの情報を保存
     localStorage.setItem('app', JSON.stringify(this.state));
-    // localStorage.clear()
   }
 
   render() {
+
     const title = ({ date, view }) => this.getTileContent({ date, view })
-    console.log(this.state)
     return (
       <>
         <Calendar
@@ -415,6 +420,7 @@ export default class App extends React.Component {
           formvalues={this.state.formvalues}
           backups={this.state.backups}
           closeModal={this.closeModal}
+          keepModal={this.keepModal}
           handleChange={this.handleChange}
           handleSubmit={this.handleSubmit}
           deleteState={this.deleteState}
