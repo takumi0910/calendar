@@ -45,19 +45,18 @@ export default class App extends React.Component {
   //モーダル内の×ボタンを押したときの処理
   closeModal() {
     this.setState({ isSubmitted: true })
+    this.setState({ backups: '' })
+    this.setState({ start_hour: '' })
+    this.setState({ start_minute: '' })
+    this.setState({ end_hour: '' })
+    this.setState({ end_minute: '' })
+    this.setState({ formvalues: '' })
   }
 
   keepModal(e) {
     let modal_class = e.target.className
     if (modal_class === 'modal-back')
-      this.setState({ isSubmitted: true })
-  }
-
-  editModal(e) {
-    let modal_class = e.target.meta
-    if (modal_class === 'meta') {
-
-    }
+      this.closeModal()
   }
 
   //日付の内容を出力
@@ -344,12 +343,7 @@ export default class App extends React.Component {
       ]
     }
     this.setState({ month_days: copySate })
-    this.setState({ backups: '' })
-    this.setState({ start_hour: '' })
-    this.setState({ start_minute: '' })
-    this.setState({ end_hour: '' })
-    this.setState({ end_minute: '' })
-    this.setState({ formvalues: '' })
+    this.closeModal()
   }
 
   //予定を編集する処理
@@ -404,7 +398,7 @@ export default class App extends React.Component {
   }
 
   render() {
-
+    console.log(this.state)
     const title = ({ date, view }) => this.getTileContent({ date, view })
     return (
       <>
