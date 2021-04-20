@@ -1,6 +1,8 @@
 import React from 'react'
 import Calendar from 'react-calendar';
 import Modal from "./components/modal"
+import Func from "./components/function"
+  
 
 export default class App extends React.Component {
   constructor(props) {
@@ -133,6 +135,8 @@ export default class App extends React.Component {
     )
   }
 
+
+
   End_timeHours() {
     let options = []
     let limited_h = this.state.start_hour
@@ -247,6 +251,7 @@ export default class App extends React.Component {
     )
   }
 
+
   //予定追加or予定編集処理
   handleSubmit() {
     this.setState({ isSubmitted: true })
@@ -320,7 +325,7 @@ export default class App extends React.Component {
 
     //予定の開始時間と終了時間を出力する表示に変更
     let start_time = start_h + ':' + start_m
-    let end_time = end_h + ':' + end_m 
+    let end_time = end_h + ':' + end_m
 
 
     if (!form && !this.state.backups[4]) {
@@ -367,18 +372,13 @@ export default class App extends React.Component {
     const key = e.target.id
     const id_copy = this.state.month_days[day]
 
-    this.setState({ start_hour: '' })
-    this.setState({ start_minute: '' })
-    this.setState({ end_hour: '' })
-    this.setState({ end_minute: '' })
-    this.setState({ formvalues: '' })
-
     for (let i = 0; i < id_copy.length; i++) {
       if (id_copy[i].id === key) {
         this.state.month_days[day].splice(i, 1);
         break;
       }
     }
+    this.closeModal()
   }
 
   // もし前回のデータがあったら、ローカルストレージの値を取得し、更新する
@@ -398,7 +398,6 @@ export default class App extends React.Component {
   }
 
   render() {
-    console.log(this.state)
     const title = ({ date, view }) => this.getTileContent({ date, view })
     return (
       <>
