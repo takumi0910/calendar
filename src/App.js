@@ -75,7 +75,7 @@ export default class App extends React.Component {
             return (
               <div className='plans'>
                 <button className={day} id={date.id} title='delete' onClick={this.deleteState}>×</button>
-                <button className={day} id={date.id} meta='edit' onClick={this.editState}>{date.text}</button>
+                <button className={day} id={date.id} onClick={this.editState}>{date.text}</button>
                 <br />
               </div>
             )
@@ -320,7 +320,7 @@ export default class App extends React.Component {
 
     //予定の開始時間と終了時間を出力する表示に変更
     let start_time = start_h + ':' + start_m
-    let end_time = end_h + ':' + end_m
+    let end_time = end_h + ':' + end_m 
 
 
     if (!form && !this.state.backups[4]) {
