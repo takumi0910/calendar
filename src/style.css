@@ -120,8 +120,8 @@ button {
 }
 
 .plans button {
-  border: rgb(0, 0, 0) 1px solid;
-  background-color: rgb(120 120 120);
+  border: rgb(121, 121, 121) 1px solid;
+  background-color:black;
   color: white;
   font-size: 6px;
 }

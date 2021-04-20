@@ -42,7 +42,7 @@ class Modal extends React.Component {
                     {this.props.End_timeMinutes()}
                   </div>
                   <div className='select-color'>
-                    <p>予定を入れる際の背景色</p>
+                    <p>予定の背景色</p>
                     <div>{this.props.tileColor()}</div>
                   </div>
                 </div>
