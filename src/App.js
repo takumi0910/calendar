@@ -1,7 +1,6 @@
 import React from 'react'
 import Calendar from 'react-calendar';
 import Modal from "./components/modal"
-import Func from "./components/function"
   
 
 export default class App extends React.Component {
