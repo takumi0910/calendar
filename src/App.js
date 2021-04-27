@@ -10,7 +10,6 @@ export default class App extends React.Component {
     super(props);
     this.state = {
       isSubmitted: true,
-      form_error: false,
       month_days: {},
       selectedDate: '',
       backups: '',
@@ -428,7 +427,7 @@ export default class App extends React.Component {
   }
 
   render() {
-    console.log(this.state)
+    console.log(this.state.view)
     const title = ({ date, view }) => this.getTileContent({ date, view })
     return (
       <BrowserRouter>
