@@ -14,6 +14,12 @@ class Modal extends React.Component {
     }
   }
 
+
+  handleChange(e) {
+      const title = e.target.value;
+      this.props.changeTitle(title);
+      }
+
   render() {
     let contactForm;
     if (this.props.isSubmitted === false) {

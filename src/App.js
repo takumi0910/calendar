@@ -2,8 +2,9 @@ import React from 'react'
 import { BrowserRouter, Link, Route, Switch } from 'react-router-dom';
 import Calendar from 'react-calendar';
 import Modal from "./components/modal"
-import Login from './components/Login';
-import Auth from './components/Auth';
+import Login from './components/login/Login';
+import Auth from './components/login/Auth';
+import Nav from './components/Nav'
 
 export default class App extends React.Component {
   constructor(props) {
@@ -18,7 +19,8 @@ export default class App extends React.Component {
       start_minute: '',
       end_hour: '',
       end_minute: '',
-      back_color: ''
+      back_color: '',
+      title: ''
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -426,6 +428,10 @@ export default class App extends React.Component {
     localStorage.setItem('app', JSON.stringify(this.state));
   }
 
+  changeTitle(title) {
+    this.setState({ title });
+  }
+
   render() {
     console.log(this.state.view)
     const title = ({ date, view }) => this.getTileContent({ date, view })
@@ -434,6 +440,7 @@ export default class App extends React.Component {
         <Switch>
           <Route exact path="/login" component={Login} />
           <Auth>
+            <Nav />
             <Calendar
               locale="ja-JP"
               tileContent={title}
@@ -441,6 +448,8 @@ export default class App extends React.Component {
               onClickDay={this.openModal.bind(this)}
             />
             <Modal
+              changeTitle={this.changeTitle.bind(this)} 
+              title={this.state.title}
               isSubmitted={this.state.isSubmitted}
               selectedDate={this.state.selectedDate}
               formvalues={this.state.formvalues}
