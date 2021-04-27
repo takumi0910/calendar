@@ -1,7 +1,9 @@
-import { red } from '@material-ui/core/colors';
 import React from 'react'
+import { BrowserRouter, Link, Route, Switch } from 'react-router-dom';
 import Calendar from 'react-calendar';
 import Modal from "./components/modal"
+import Login from './components/Login';
+import Auth from './components/Auth';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -45,39 +47,38 @@ export default class App extends React.Component {
     this.setState({ selectedDate: value })
   }
 
-  setEmpty() {
-
+  //モーダルを閉じた際に使い回すstateの更新処理
+  inputDelete() {
+    this.setState({ start_hour: '' })
+    this.setState({ start_minute: '' })
+    this.setState({ end_hour: '' })
+    this.setState({ end_minute: '' })
+    this.setState({ formvalues: '' })
+    this.setState({ back_color: '' })
   }
 
   //モーダル内の×ボタンを押したときの処理
   closeModal() {
     this.setState({ isSubmitted: true })
-    this.setState({ start_hour: '' })
-    this.setState({ start_minute: '' })
-    this.setState({ end_hour: '' })
-    this.setState({ end_minute: '' })
-    this.setState({ back_color: '' })
+    this.setState({ backups: '' })
+    this.inputDelete()
   }
 
+  //モーダル表示中にモーダル外を押した際の処理
   keepModal(e) {
     let modal_class = e.target.className
     if (modal_class === 'modal-back') {
       this.setState({ isSubmitted: true })
-      this.setState({ start_hour: '' })
-      this.setState({ start_minute: '' })
-      this.setState({ end_hour: '' })
-      this.setState({ end_minute: '' })
-      this.setState({ back_color: '' })
+      this.setState({ backups: '' })
+      this.inputDelete()
     }
   }
 
-  //日付の内容を出力
+  //カレンダーで予定を出力
   getTileContent({ date, view }) {
-    // 月表示のときのみ
     if (view !== 'month') {
       return null;
     }
-    //日付の形式を表示可能に変えてくれる
     const day = this.getFormatDate(date);
     return (
       <p>
@@ -131,7 +132,7 @@ export default class App extends React.Component {
     let options = []
     for (var i = 0; i <= 50; i++) {
       let j = ('0' + i).slice(-2);
-      if (j % 10 == 0) {
+      if (j % 10 === 0) {
         options.push(<option value={j}>{j}</option>)
       }
     }
@@ -162,10 +163,10 @@ export default class App extends React.Component {
 
     for (var i = 0; i <= 23; i++) {
       if (i >= limited_h) {
-        if (i != end_h) {
+        if (i !== end_h) {
           options.push(<option value={i}>{i}</option>)
         }
-        else if (i == end_h) {
+        else if (i === end_h) {
           options.push(<option value={i} selected>{i}</option>)
         }
       }
@@ -227,9 +228,9 @@ export default class App extends React.Component {
 
     if (limited_start !== limited_end) {
       for (var i = 0; i <= 50; i++) {
-        if (i % 10 == 0) {
+        if (i % 10 === 0) {
           let j = ('0' + i).slice(-2);
-          if (i != end_m) {
+          if (i !== end_m) {
             options.push(<option value={j}>{j}</option>)
           }
           else {
@@ -239,9 +240,9 @@ export default class App extends React.Component {
       }
     } else if (limited_start === limited_end) {
       for (var i = 0; i <= 50; i++) {
-        if (i % 10 == 0 && i >= limited_minutes) {
+        if (i % 10 === 0 && i >= limited_minutes) {
           let j = ('0' + i).slice(-2);
-          if (i != end_m) {
+          if (i !== end_m) {
             options.push(<option value={j}>{j}</option>)
           }
           else {
@@ -291,7 +292,7 @@ export default class App extends React.Component {
     let end_h = this.state.end_hour
     let end_m = this.state.end_minute
     let form = this.state.formvalues
-    let color = this.state.back_color
+    let color = ''
 
     // 予定が始まる時間が空か確かめる（1時間単位）
     if (!start_h && this.state.backups[0]) {
@@ -332,8 +333,13 @@ export default class App extends React.Component {
       form = ''
     }
 
-    if (!color) {
-      color = '#c0c0c0;'
+
+    if (!this.state.back_color && this.state.backups[5]) {
+      color = this.state.backups[5]
+    } else if (!this.state.back_color && !this.state.backups[5]) {
+      color = 'black'
+    } else {
+      color = this.state.back_color
     }
 
     //入力処理の間違いを防ぐ
@@ -372,12 +378,7 @@ export default class App extends React.Component {
     }
     this.setState({ month_days: copySate })
     this.setState({ backups: '' })
-    this.setState({ start_hour: '' })
-    this.setState({ start_minute: '' })
-    this.setState({ end_hour: '' })
-    this.setState({ end_minute: '' })
-    this.setState({ formvalues: '' })
-    this.setState({ back_color: '' })
+    this.inputDelete()
   }
 
   //予定を編集する処理
@@ -400,13 +401,7 @@ export default class App extends React.Component {
     const day = e.target.className
     const key = e.target.id
     const id_copy = this.state.month_days[day]
-
-    this.setState({ start_hour: '' })
-    this.setState({ start_minute: '' })
-    this.setState({ end_hour: '' })
-    this.setState({ end_minute: '' })
-    this.setState({ formvalues: '' })
-    this.setState({ back_color: '' })
+    this.inputDelete()
 
     for (let i = 0; i < id_copy.length; i++) {
       if (id_copy[i].id === key) {
@@ -436,31 +431,36 @@ export default class App extends React.Component {
     console.log(this.state)
     const title = ({ date, view }) => this.getTileContent({ date, view })
     return (
-      <>
-        <Calendar
-          locale="ja-JP"
-          tileContent={title}
-          value={this.state.date}
-          onClickDay={this.openModal.bind(this)}
-        />
-        <Modal
-          isSubmitted={this.state.isSubmitted}
-          selectedDate={this.state.selectedDate}
-          formvalues={this.state.formvalues}
-          backups={this.state.backups}
-          form_error={this.state.form_error}
-          closeModal={this.closeModal}
-          keepModal={this.keepModal}
-          handleChange={this.handleChange}
-          handleSubmit={this.handleSubmit}
-          deleteState={this.deleteState}
-          Start_timeHours={this.Start_timeHours}
-          Start_timeMinutes={this.Start_timeMinutes}
-          End_timeHours={this.End_timeHours}
-          End_timeMinutes={this.End_timeMinutes}
-          tileColor={this.tileColor}
-        />
-      </>
+      <BrowserRouter>
+        <Switch>
+          <Route exact path="/login" component={Login} />
+          <Auth>
+            <Calendar
+              locale="ja-JP"
+              tileContent={title}
+              value={this.state.date}
+              onClickDay={this.openModal.bind(this)}
+            />
+            <Modal
+              isSubmitted={this.state.isSubmitted}
+              selectedDate={this.state.selectedDate}
+              formvalues={this.state.formvalues}
+              backups={this.state.backups}
+              form_error={this.state.form_error}
+              closeModal={this.closeModal}
+              keepModal={this.keepModal}
+              handleChange={this.handleChange}
+              handleSubmit={this.handleSubmit}
+              deleteState={this.deleteState}
+              Start_timeHours={this.Start_timeHours}
+              Start_timeMinutes={this.Start_timeMinutes}
+              End_timeHours={this.End_timeHours}
+              End_timeMinutes={this.End_timeMinutes}
+              tileColor={this.tileColor}
+            />
+          </Auth>
+        </Switch>
+      </BrowserRouter>
     );
   }
 }
