@@ -25,7 +25,6 @@ export default class App extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.Start_timeMinutes = this.Start_timeMinutes.bind(this);
-    this.Start_timeHours = this.Start_timeHours.bind(this);
     this.End_timeHours = this.End_timeHours.bind(this);
     this.End_timeMinutes = this.End_timeMinutes.bind(this);
     this.tileColor = this.tileColor.bind(this);
@@ -113,20 +112,20 @@ export default class App extends React.Component {
   }
 
   //予定が始まる時間を設定（1時間単位）
-  Start_timeHours() {
-    let options = []
-    for (var i = 0; i <= 23; i++) {
-      options.push(<option value={i}>{i}</option>)
-    }
-    return (
-      <select defaultValue={this.state.backups[0]}
-        onChange={(e) => {
-          this.setState({ start_hour: e.target.value })
-        }} >
-        {options}
-      </select>
-    )
-  }
+  // Start_timeHours() {
+  //   let options = []
+  //   for (var i = 0; i <= 23; i++) {
+  //     options.push(<option value={i}>{i}</option>)
+  //   }
+  //   return (
+  //     <select defaultValue={this.state.backups[0]}
+  //       onChange={(e) => {
+  //         this.setState({ start_hour: e.target.value })
+  //       }} >
+  //       {options}
+  //     </select>
+  //   )
+  // }
 
   //予定が始まる時間を設定（10分単位）
   Start_timeMinutes() {
@@ -432,8 +431,17 @@ export default class App extends React.Component {
     this.setState({ title });
   }
 
+  Set_starthour(start_hour) {
+    this.setState({ start_hour });
+  }
+
+  Set_startminute(start_minute) {
+    this.setState({ start_minute });
+  }
+
+
+
   render() {
-    console.log(this.state.view)
     const title = ({ date, view }) => this.getTileContent({ date, view })
     return (
       <BrowserRouter>
@@ -448,8 +456,13 @@ export default class App extends React.Component {
               onClickDay={this.openModal.bind(this)}
             />
             <Modal
-              changeTitle={this.changeTitle.bind(this)} 
+              changeTitle={this.changeTitle.bind(this)}
               title={this.state.title}
+              start={this.state.start}
+
+              Set_starthour={this.Set_starthour.bind(this)}
+              Set_startminute={this.Set_startminute.bind(this)}
+
               isSubmitted={this.state.isSubmitted}
               selectedDate={this.state.selectedDate}
               formvalues={this.state.formvalues}

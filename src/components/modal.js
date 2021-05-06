@@ -1,4 +1,6 @@
 import React from 'react'
+import Start_Hour from './set_time/start_hour'
+import Start_Minute from './set_time/start_minute'
 
 class Modal extends React.Component {
 
@@ -14,13 +16,32 @@ class Modal extends React.Component {
     }
   }
 
+  shot() {
+    let options = []
+    for (var i = 0; i <= 23; i++) {
+      options.push(<option value={i}>{i}</option>)
+    }
+    return (
+      <select defaultValue=''
+        onChange={this.handletime.bind(this)} >
+        {options}
+      </select>
+    )
+  }
+
+  handletime(e) {
+    const start = e.target.value
+    this.props.changetime(start)
+  }
+
 
   handleChange(e) {
-      const title = e.target.value;
-      this.props.changeTitle(title);
-      }
+    const title = e.target.value;
+    this.props.changeTitle(title);
+  }
 
   render() {
+    console.log(this.props.backups[2])
     let contactForm;
     if (this.props.isSubmitted === false) {
       contactForm = (
@@ -39,9 +60,16 @@ class Modal extends React.Component {
                   <p>選択した日 : {this.formatDate(this.props.selectedDate)}</p>
                   <p className='plans-time'>予定時間</p>
                   <div className='time-box'>
-                    {this.props.Start_timeHours()}
+                    {/* {this.props.Start_timeHours()} */}
+                    <Start_Hour
+                      Set_starthour={this.props.Set_starthour.bind(this)}
+                      backups={this.props.backups}
+                    />
                     <p>:</p>
-                    {this.props.Start_timeMinutes()}
+                    <Start_Minute
+                      Set_startminute={this.props.Set_startminute.bind(this)}
+                      backups={this.props.backups}
+                    />
                     <p>～</p>
                     {this.props.End_timeHours()}
                     <p>:</p>
@@ -62,6 +90,7 @@ class Modal extends React.Component {
                   type='submit'
                   value='登録'
                 />
+                <input value={this.props.title} onChange={this.handleChange.bind(this)} />
               </div>
             </div>
           </div>
