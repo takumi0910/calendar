@@ -15,6 +15,7 @@ export default class App extends React.Component {
       selectedDate: '',
       backups: '',
       formvalues: '',
+      fixed_time: '',
       start_hour: '',
       start_minute: '',
       end_hour: '',
@@ -255,17 +256,14 @@ export default class App extends React.Component {
     localStorage.setItem('app', JSON.stringify(this.state));
   }
 
-  //開始時刻を設定(1時間単位)
   Set_starthour(start_hour) {
     this.setState({ start_hour });
   }
 
-  //開始時刻を設定(1分単位)
   Set_startminute(start_minute) {
     this.setState({ start_minute });
   }
 
-  //終了時刻を設定(1時間単位)
   Set_endhour(end_hour) {
     this.setState({ end_hour })
   }
@@ -276,6 +274,10 @@ export default class App extends React.Component {
 
   Set_tileColor(back_color) {
     this.setState({ back_color });
+  }
+
+  Set_fixed_sh(){
+    this.setState({ })
   }
 
   //予定の内容を設定
@@ -307,6 +309,8 @@ export default class App extends React.Component {
               Set_endminute={this.Set_endminute.bind(this)}
               Set_tileColor={this.Set_tileColor.bind(this)}
               getUniqueStr={this.getUniqueStr.bind(this)}
+              closeModal={this.closeModal.bind(this)}
+              keepModal={this.keepModal.bind(this)}
               origin={this.state}
             />
           </Auth>

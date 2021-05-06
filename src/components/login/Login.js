@@ -5,25 +5,38 @@ class Login extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            text: '',
+            mail: '',
+            pass: ''
         };
     }
 
+    register_mail(e) {
+        let adress = e.target.value
+        this.setState({ mail: adress })
+    }
+
+    register_pass(e) {
+        let password = e.target.value
+        this.setState({ pass: password })
+    }
+
     handleLogin = () => {
-        localStorage.setItem("login", "true");
-        this.props.history.push("/");
+        if (this.state.mail === 'example@gmail.com' && this.state.pass === 'password') {
+            localStorage.setItem("login", "true");
+            this.props.history.push("/");
+        }
     }
 
     render() {
-        console.log(this.state.text)
+        console.log(this.state.mail)
         return (
             <div className='login-form'>
                 <div className='main'>
-                <div className='mail'>メールアドレス</div>
-                <input type="text" />
-                <div className='pass'>パスワード</div>
-                <input type="text"/>
-                <button className='login-btn' onClick={() => this.handleLogin()}>ログイン</button>
+                    <div className='mail'>メールアドレス</div>
+                    <input type="text" placeholder='example@gmail.com' onChange={this.register_mail.bind(this)} />
+                    <div className='pass'>パスワード</div>
+                    <input type="text" placeholder='password' onChange={this.register_pass.bind(this)} />
+                    <button className='login-btn' onClick={() => this.handleLogin()}>ログイン</button>
                 </div>
             </div>
         );

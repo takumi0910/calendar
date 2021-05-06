@@ -7,10 +7,6 @@ import Start_Minute from './set_time/start_minute'
 
 class Modal extends React.Component {
 
-  getFormatDate(date) {
-    return `${date.getFullYear()}${('0' + (date.getMonth() + 1)).slice(-2)}${('0' + date.getDate()).slice(-2)}`;
-  }
-
   //モーダル上部に予定を入れようとしている日付を表示
   formatDate(d) {
     const date = new Date(d)
@@ -22,22 +18,6 @@ class Modal extends React.Component {
       return this.props.origin.backups[4]
     }
   }
-
-  // shotSumbit() {
-  //   let date = this.getFormatDate(new Date(this.props.origin.selectedDate))
-
-  //   const copySate = this.props.origin.month_days
-
-  //   const dates = Object.keys(copySate)
-
-  //   const index = dates.indexOf(date)
-
-  //   const random_id = this.props.getUniqueStr()
-
-  //   date = Number(date)
-
-
-  // }
 
   render() {
     let contactForm;
