@@ -46,7 +46,6 @@ button {
 
 
 /* 最上部メニューのCSS */
-
 .top-menu {
   background-color: rgb(145, 145, 145);
 }
@@ -79,6 +78,9 @@ button {
 }
 
 /* モーダル部分のCSS */
+.time-box select {
+  height: 100%;
+}
 
 .modal-back {
   /*　画面全体を覆う設定　*/

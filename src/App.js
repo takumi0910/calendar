@@ -1,5 +1,5 @@
 import React from 'react'
-import { BrowserRouter, Link, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Calendar from 'react-calendar';
 import Modal from "./components/modal"
 import Login from './components/login/Login';
@@ -22,14 +22,6 @@ export default class App extends React.Component {
       back_color: '',
       title: ''
     };
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.Start_timeMinutes = this.Start_timeMinutes.bind(this);
-    this.End_timeHours = this.End_timeHours.bind(this);
-    this.End_timeMinutes = this.End_timeMinutes.bind(this);
-    this.tileColor = this.tileColor.bind(this);
-    this.closeModal = this.closeModal.bind(this);
-    this.keepModal = this.keepModal.bind(this);
   }
 
   // state の日付と同じ表記に変換
@@ -94,7 +86,7 @@ export default class App extends React.Component {
             )
           })
         }
-      </p >
+      </p>
     );
   }
 
@@ -103,170 +95,6 @@ export default class App extends React.Component {
     var strong = 1000;
     if (myStrong) strong = myStrong;
     return new Date().getTime().toString(16) + Math.floor(strong * Math.random()).toString(16)
-  }
-
-  //予定の内容を設定
-  handleChange(event) {
-    const value = event.target.value
-    this.setState({ formvalues: value })
-  }
-
-  //予定が始まる時間を設定（1時間単位）
-  // Start_timeHours() {
-  //   let options = []
-  //   for (var i = 0; i <= 23; i++) {
-  //     options.push(<option value={i}>{i}</option>)
-  //   }
-  //   return (
-  //     <select defaultValue={this.state.backups[0]}
-  //       onChange={(e) => {
-  //         this.setState({ start_hour: e.target.value })
-  //       }} >
-  //       {options}
-  //     </select>
-  //   )
-  // }
-
-  //予定が始まる時間を設定（10分単位）
-  Start_timeMinutes() {
-    let options = []
-    for (var i = 0; i <= 50; i++) {
-      let j = ('0' + i).slice(-2);
-      if (j % 10 === 0) {
-        options.push(<option value={j}>{j}</option>)
-      }
-    }
-    return (
-      <select defaultValue={this.state.backups[1]}
-        onChange={(e) => {
-          this.setState({ start_minute: e.target.value })
-        }}>
-        {options}
-      </select>
-    )
-  }
-
-  End_timeHours() {
-    let options = []
-    let limited_h = this.state.start_hour
-    let end_h = this.state.end_hour
-    let end_dh = this.state.backups[2]
-
-    if (!limited_h && !this.state.backups[0]) {
-    } else if (!limited_h && this.state.backups[0]) {
-      limited_h = this.state.backups[0]
-    }
-
-    if (!end_h && end_dh) {
-      end_h = end_dh
-    }
-
-    for (var i = 0; i <= 23; i++) {
-      if (i >= limited_h) {
-        if (i !== end_h) {
-          options.push(<option value={i}>{i}</option>)
-        }
-        else if (i === end_h) {
-          options.push(<option value={i} selected>{i}</option>)
-        }
-      }
-    }
-
-    return (
-      <select defaultValue={this.state.backups[2]}
-        onChange={(e) => {
-          this.setState({ end_hour: e.target.value })
-        }}>
-        {options}
-      </select >
-    )
-  }
-
-  //予定が終わる時間を設定（1分単位）
-  End_timeMinutes() {
-    let options = []
-    let start_h = this.state.start_hour
-    let end_m = this.state.end_minute
-    let end_h = this.state.end_hour
-    let start_dh = this.state.backups[0]
-    let start_dm = this.state.backups[1]
-    let end_dh = this.state.backups[2]
-    let limited_start = ''
-    let limited_end = ''
-    let limited_minutes = this.state.start_minute
-
-    //分数制限の値の算出
-    if (!limited_minutes && start_dm) {
-      limited_minutes = start_dm
-    } else if (!limited_minutes && start_dm) {
-      limited_minutes = 0
-    }
-
-    //初めの時間を取得
-    if (!start_h && !start_dh) {
-      limited_start = ''
-    } else if (!start_h && start_dh) {
-      limited_start = start_dh
-    } else {
-      limited_start = start_h
-    }
-
-    //終わりの時間を取得
-    if (!end_h && !end_dh && !limited_start) {
-      limited_end = ''
-    } else if (!end_h && end_dh && !limited_start) {
-      limited_end = end_dh
-    } else if (!end_h && limited_start === start_dh) {
-      limited_end = start_dh
-    } else if (!end_h && start_h) {
-      limited_end = start_h
-    } else if (end_h && start_h > end_h) {
-      limited_end = limited_start
-    } else if (end_h) {
-      limited_end = end_h
-    }
-
-    if (limited_start !== limited_end) {
-      for (var i = 0; i <= 50; i++) {
-        if (i % 10 === 0) {
-          let j = ('0' + i).slice(-2);
-          if (i !== end_m) {
-            options.push(<option value={j}>{j}</option>)
-          }
-          else {
-            options.push(<option value={j} selected>{j}</option>)
-          }
-        }
-      }
-    } else if (limited_start === limited_end) {
-      for (var i = 0; i <= 50; i++) {
-        if (i % 10 === 0 && i >= limited_minutes) {
-          let j = ('0' + i).slice(-2);
-          if (i !== end_m) {
-            options.push(<option value={j}>{j}</option>)
-          }
-          else {
-            options.push(<option value={j} selected>{j}</option>)
-          }
-        }
-      }
-    }
-
-    return (
-      <select defaultValue={this.state.backups[3]}
-        onChange={(e) => this.setState({ end_minute: e.target.value })}>
-        {options}
-      </select>
-    )
-  }
-
-  tileColor() {
-    let default_color = this.state.backups[5]
-    return (
-      <input type='color'
-        defaultValue={default_color}
-        onChange={(e) => this.setState({ back_color: e.target.value })}></input>
-    )
   }
 
   //予定追加or予定編集処理
@@ -427,19 +255,34 @@ export default class App extends React.Component {
     localStorage.setItem('app', JSON.stringify(this.state));
   }
 
-  changeTitle(title) {
-    this.setState({ title });
-  }
-
+  //開始時刻を設定(1時間単位)
   Set_starthour(start_hour) {
     this.setState({ start_hour });
   }
 
+  //開始時刻を設定(1分単位)
   Set_startminute(start_minute) {
     this.setState({ start_minute });
   }
 
+  //終了時刻を設定(1時間単位)
+  Set_endhour(end_hour) {
+    this.setState({ end_hour })
+  }
 
+  Set_endminute(end_minute) {
+    this.setState({ end_minute });
+  }
+
+  Set_tileColor(back_color) {
+    this.setState({ back_color });
+  }
+
+  //予定の内容を設定
+  handleChange(event) {
+    const value = event.target.value
+    this.setState({ formvalues: value })
+  }
 
   render() {
     const title = ({ date, view }) => this.getTileContent({ date, view })
@@ -456,28 +299,15 @@ export default class App extends React.Component {
               onClickDay={this.openModal.bind(this)}
             />
             <Modal
-              changeTitle={this.changeTitle.bind(this)}
-              title={this.state.title}
-              start={this.state.start}
-
+              handleChange={this.handleChange.bind(this)}
+              handleSubmit={this.handleSubmit.bind(this)}
               Set_starthour={this.Set_starthour.bind(this)}
               Set_startminute={this.Set_startminute.bind(this)}
-
-              isSubmitted={this.state.isSubmitted}
-              selectedDate={this.state.selectedDate}
-              formvalues={this.state.formvalues}
-              backups={this.state.backups}
-              form_error={this.state.form_error}
-              closeModal={this.closeModal}
-              keepModal={this.keepModal}
-              handleChange={this.handleChange}
-              handleSubmit={this.handleSubmit}
-              deleteState={this.deleteState}
-              Start_timeHours={this.Start_timeHours}
-              Start_timeMinutes={this.Start_timeMinutes}
-              End_timeHours={this.End_timeHours}
-              End_timeMinutes={this.End_timeMinutes}
-              tileColor={this.tileColor}
+              Set_endhour={this.Set_endhour.bind(this)}
+              Set_endminute={this.Set_endminute.bind(this)}
+              Set_tileColor={this.Set_tileColor.bind(this)}
+              getUniqueStr={this.getUniqueStr.bind(this)}
+              origin={this.state}
             />
           </Auth>
         </Switch>

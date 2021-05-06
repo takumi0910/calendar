@@ -6,8 +6,8 @@ class Start_Minute extends React.Component {
     }
 
     handletime(e) {
-        const start = e.target.value
-        this.props.Set_startminute(start)
+        const time = e.target.value
+        this.props.Set_startminute(time)
     }
 
     select_startminute() {

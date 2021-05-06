@@ -6,8 +6,8 @@ class Start_Hour extends React.Component {
     }
 
     handletime(e) {
-        const start = e.target.value
-        this.props.Set_starthour(start)
+        const time = e.target.value
+        this.props.Set_starthour(time)
     }
 
     select_starthour() {
