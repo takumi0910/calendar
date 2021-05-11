@@ -1,5 +1,5 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 
 class Login extends React.Component {
     constructor(props) {
@@ -37,6 +37,9 @@ class Login extends React.Component {
                     <div className='pass'>パスワード</div>
                     <input type="text" placeholder='password' onChange={this.register_pass.bind(this)} />
                     <button className='login-btn' onClick={() => this.handleLogin()}>ログイン</button>
+                    <Link to='/signup'>
+                        <button>技術はいつもそこにある</button>
+                    </Link>
                 </div>
             </div>
         );

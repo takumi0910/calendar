@@ -5,6 +5,7 @@ import Modal from "./components/modal"
 import Login from './components/login/Login';
 import Auth from './components/login/Auth';
 import Nav from './components/Nav'
+import SignUp from './components/login/SignUp';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -91,125 +92,6 @@ export default class App extends React.Component {
     );
   }
 
-  //ランダムなidの作成
-  getUniqueStr(myStrong) {
-    var strong = 1000;
-    if (myStrong) strong = myStrong;
-    return new Date().getTime().toString(16) + Math.floor(strong * Math.random()).toString(16)
-  }
-
-  //予定追加or予定編集処理
-  handleSubmit() {
-    this.setState({ isSubmitted: true })
-
-    let date = this.getFormatDate(new Date(this.state.selectedDate))
-
-    const copySate = this.state.month_days
-
-    const dates = Object.keys(copySate)
-
-    const index = dates.indexOf(date)
-
-    const random_id = this.getUniqueStr()
-
-    date = Number(date)
-
-
-    //stateを変数に代入
-    let start_h = this.state.start_hour
-    let start_m = this.state.start_minute
-    let end_h = this.state.end_hour
-    let end_m = this.state.end_minute
-    let form = this.state.formvalues
-    let color = ''
-
-    // 予定が始まる時間が空か確かめる（1時間単位）
-    if (!start_h && this.state.backups[0]) {
-      start_h = this.state.backups[0]
-    } else if (!start_h && !this.state.backups[0]) {
-      start_h = '0'
-    }
-
-    //予定が始まる時間が空か確かめる（1分単位）
-    if (!start_m && this.state.backups[1]) {
-      start_m = this.state.backups[1]
-    } else if (!start_m && !this.state.backups[1]) {
-      start_m = '00'
-    }
-
-    //予定が終わる時間が空か確かめる（1時間単位）
-    if (!end_h && this.state.backups[2]) {
-      if (this.state.start_hour > this.state.backups[2]) {
-        end_h = this.state.start_hour
-      } else {
-        end_h = this.state.backups[2]
-      }
-    } else if (!end_h && !this.state.backups[2] && start_h) {
-      end_h = start_h
-    }
-
-    //予定が終わる時間が空か確かめる（1分単位）
-    if (!end_m && this.state.backups[3]) {
-      end_m = this.state.backups[3]
-    } else if (!end_m && !this.state.backups[3] && start_m) {
-      end_m = start_m
-    }
-
-    //予定内容が空か確かめる
-    if (!form && this.state.backups[4]) {
-      form = this.state.backups[4]
-    } else if (!form && !this.state.backups[4]) {
-      form = ''
-    }
-
-
-    if (!this.state.back_color && this.state.backups[5]) {
-      color = this.state.backups[5]
-    } else if (!this.state.back_color && !this.state.backups[5]) {
-      color = 'black'
-    } else {
-      color = this.state.back_color
-    }
-
-    //入力処理の間違いを防ぐ
-    if (end_h < start_h) {
-      end_h = start_h
-    }
-    if (start_h === end_h && start_m > end_m) {
-      end_m = start_m
-    }
-
-    //予定の開始時間と終了時間を出力する表示に変更
-    let start_time = start_h + ':' + start_m
-    let end_time = end_h + ':' + end_m
-
-
-    if (!form && !this.state.backups[4]) {
-      this.setState({ form_error: true })
-    }
-    else if (index !== -1) {
-      copySate[date].push({
-        id: random_id,
-        text: (start_time + '～' + end_time + '\n' + form),
-        backup: [start_h, start_m, end_h, end_m, form],
-        back_color: color
-      })
-    }
-    else if (form && start_time !== ':' || end_time !== ':') {
-      copySate[date] = [
-        {
-          id: random_id,
-          text: (start_time + '～' + end_time + '\n' + form),
-          backup: [start_h, start_m, end_h, end_m, form],
-          back_color: color
-        }
-      ]
-    }
-    this.setState({ month_days: copySate })
-    this.setState({ backups: '' })
-    this.inputDelete()
-  }
-
   //予定を編集する処理
   editState = (e) => {
     const day = e.target.className
@@ -276,22 +158,33 @@ export default class App extends React.Component {
     this.setState({ back_color });
   }
 
-  Set_fixed_sh(){
-    this.setState({ })
-  }
-
   //予定の内容を設定
   handleChange(event) {
     const value = event.target.value
     this.setState({ formvalues: value })
   }
 
+  Set_modal(month_days) {
+    this.setState({ month_days })
+  }
+
+  submitClose() {
+    this.setState({ isSubmitted: true })
+  }
+
+  submitDelete() {
+    this.setState({ backups: '' })
+  }
+
+
   render() {
+    console.log(this.state)
     const title = ({ date, view }) => this.getTileContent({ date, view })
     return (
       <BrowserRouter>
         <Switch>
           <Route exact path="/login" component={Login} />
+          <Route exact path='/signup' component={SignUp} />
           <Auth>
             <Nav />
             <Calendar
@@ -301,17 +194,20 @@ export default class App extends React.Component {
               onClickDay={this.openModal.bind(this)}
             />
             <Modal
+              getFormatDate={this.getFormatDate.bind(this)}
               handleChange={this.handleChange.bind(this)}
-              handleSubmit={this.handleSubmit.bind(this)}
               Set_starthour={this.Set_starthour.bind(this)}
               Set_startminute={this.Set_startminute.bind(this)}
               Set_endhour={this.Set_endhour.bind(this)}
               Set_endminute={this.Set_endminute.bind(this)}
               Set_tileColor={this.Set_tileColor.bind(this)}
-              getUniqueStr={this.getUniqueStr.bind(this)}
               closeModal={this.closeModal.bind(this)}
               keepModal={this.keepModal.bind(this)}
               origin={this.state}
+              Set_modal={this.Set_modal.bind(this)}
+              submitClose={this.submitClose.bind(this)}
+              submitDelete={this.submitDelete.bind(this)}
+              inputDelete={this.inputDelete.bind(this)}
             />
           </Auth>
         </Switch>

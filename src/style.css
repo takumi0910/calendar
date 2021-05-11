@@ -193,7 +193,7 @@ button {
 }
 
 /* ログイン画面のCSS */
-.login-form{
+.login-form, .signup-form{
   background-color: rgb(155, 155, 155);
   width: 300px;
   margin: 50px auto;
