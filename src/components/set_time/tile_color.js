@@ -7,7 +7,7 @@ class TileColor extends React.Component {
 
     handletime(e) {
         const color = e.target.value
-        this.props.Set_tileColor(color)
+        this.props.setTileColor(color)
     }
 
     render() {

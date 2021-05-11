@@ -7,7 +7,7 @@ class End_Hour extends React.Component {
 
     handletime(e) {
         const time = e.target.value
-        this.props.Set_endhour(time)
+        this.props.setEndHour(time)
     }
 
     select_endhour() {

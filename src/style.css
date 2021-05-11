@@ -223,3 +223,13 @@ button {
   outline: none;
   margin-bottom: 20px;
 }
+
+.finish{
+  position: absolute;
+  top: 50px;
+  left: 400px;
+  width: 400px;
+  height: 420px;
+  background-color: rgb(155, 155, 155);
+  margin: auto auto;
+}

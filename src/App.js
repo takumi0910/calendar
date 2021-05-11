@@ -1,7 +1,7 @@
 import React from 'react'
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Calendar from 'react-calendar';
-import Modal from "./components/modal"
+import Modal from "./components/Modal"
 import Login from './components/login/Login';
 import Auth from './components/login/Auth';
 import Nav from './components/Nav'
@@ -16,7 +16,6 @@ export default class App extends React.Component {
       selectedDate: '',
       backups: '',
       formvalues: '',
-      fixed_time: '',
       start_hour: '',
       start_minute: '',
       end_hour: '',
@@ -62,9 +61,7 @@ export default class App extends React.Component {
   keepModal(e) {
     let modal_class = e.target.className
     if (modal_class === 'modal-back') {
-      this.setState({ isSubmitted: true })
-      this.setState({ backups: '' })
-      this.inputDelete()
+      this.closeModal()
     }
   }
 
@@ -122,6 +119,43 @@ export default class App extends React.Component {
     }
   }
 
+  setStartHour(start_hour) {
+    this.setState({ start_hour });
+  }
+
+  setStartMinute(start_minute) {
+    this.setState({ start_minute });
+  }
+
+  setEndHour(end_hour) {
+    this.setState({ end_hour })
+  }
+
+  setEndMinute(end_minute) {
+    this.setState({ end_minute });
+  }
+
+  setTileColor(back_color) {
+    this.setState({ back_color });
+  }
+
+  handleChange(event) {
+    const value = event.target.value
+    this.setState({ formvalues: value })
+  }
+
+  setPlans(month_days) {
+    this.setState({ month_days })
+  }
+
+  handleClose() {
+    this.setState({ isSubmitted: true })
+  }
+
+  handleDelete() {
+    this.setState({ backups: '' })
+  }
+
   // もし前回のデータがあったら、ローカルストレージの値を取得し、更新する
   componentDidMount() {
     if (localStorage.app) {
@@ -134,51 +168,11 @@ export default class App extends React.Component {
 
   // stateが変更されたら実行
   componentDidUpdate() {
-    // ローカルストレージにステートの情報を保存
     localStorage.setItem('app', JSON.stringify(this.state));
   }
 
-  Set_starthour(start_hour) {
-    this.setState({ start_hour });
-  }
-
-  Set_startminute(start_minute) {
-    this.setState({ start_minute });
-  }
-
-  Set_endhour(end_hour) {
-    this.setState({ end_hour })
-  }
-
-  Set_endminute(end_minute) {
-    this.setState({ end_minute });
-  }
-
-  Set_tileColor(back_color) {
-    this.setState({ back_color });
-  }
-
-  //予定の内容を設定
-  handleChange(event) {
-    const value = event.target.value
-    this.setState({ formvalues: value })
-  }
-
-  Set_modal(month_days) {
-    this.setState({ month_days })
-  }
-
-  submitClose() {
-    this.setState({ isSubmitted: true })
-  }
-
-  submitDelete() {
-    this.setState({ backups: '' })
-  }
-
-
   render() {
-    console.log(this.state)
+    console.log(this.state.date)
     const title = ({ date, view }) => this.getTileContent({ date, view })
     return (
       <BrowserRouter>
@@ -196,18 +190,19 @@ export default class App extends React.Component {
             <Modal
               getFormatDate={this.getFormatDate.bind(this)}
               handleChange={this.handleChange.bind(this)}
-              Set_starthour={this.Set_starthour.bind(this)}
-              Set_startminute={this.Set_startminute.bind(this)}
-              Set_endhour={this.Set_endhour.bind(this)}
-              Set_endminute={this.Set_endminute.bind(this)}
-              Set_tileColor={this.Set_tileColor.bind(this)}
+              setStartHour={this.setStartHour.bind(this)}
+              setStartMinute={this.setStartMinute.bind(this)}
+              setEndHour={this.setEndHour.bind(this)}
+              setEndMinute={this.setEndMinute.bind(this)}
+              setTileColor={this.setTileColor.bind(this)}
               closeModal={this.closeModal.bind(this)}
               keepModal={this.keepModal.bind(this)}
-              origin={this.state}
-              Set_modal={this.Set_modal.bind(this)}
-              submitClose={this.submitClose.bind(this)}
-              submitDelete={this.submitDelete.bind(this)}
+              setPlans={this.setPlans.bind(this)}
+              handleClose={this.handleClose.bind(this)}
+              handleDelete={this.handleDelete.bind(this)}
               inputDelete={this.inputDelete.bind(this)}
+              origin={this.state}
+              date={this.date}
             />
           </Auth>
         </Switch>

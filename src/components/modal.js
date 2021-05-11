@@ -27,8 +27,8 @@ class Modal extends React.Component {
   }
 
   submit() {
-    console.log('ug')
-    this.props.submitClose()
+    this.props.handleClose()
+    
     let date = this.props.getFormatDate(new Date(this.props.origin.selectedDate))
 
     const copySate = this.props.origin.month_days
@@ -108,9 +108,6 @@ class Modal extends React.Component {
     let start_time = start_h + ':' + start_m
     let end_time = end_h + ':' + end_m
 
-    // if (!form && !this.props.origin.backups[4]) {
-    //   this.setState({ form_error: true })
-    // }
     if (index !== -1) {
       copySate[date].push({
         id: random_id,
@@ -129,8 +126,8 @@ class Modal extends React.Component {
         }
       ]
     }
-    this.props.Set_modal(copySate)
-    this.props.submitDelete()
+    this.props.setPlans(copySate)
+    this.props.handleDelete()
     this.props.inputDelete()
   }
 
@@ -151,24 +148,24 @@ class Modal extends React.Component {
                   <p className='plans-time'>予定時間</p>
                   <div className='time-box'>
                     <Start_Hour
-                      Set_starthour={this.props.Set_starthour.bind(this)}
+                      setStartHour={this.props.setStartHour.bind(this)}
                       backups={this.props.origin.backups}
                     />
                     <p>:</p>
                     <Start_Minute
-                      Set_startminute={this.props.Set_startminute.bind(this)}
+                      setStartMinute={this.props.setStartMinute.bind(this)}
                       backups={this.props.origin.backups}
                     />
                     <p>～</p>
                     <End_Hour
-                      Set_endhour={this.props.Set_endhour.bind(this)}
+                      setEndHour={this.props.setEndHour.bind(this)}
                       backups={this.props.origin.backups}
                       start_hour={this.props.origin.start_hour}
                       end_hour={this.props.origin.end_hour}
                     />
                     <p>:</p>
                     <End_Minute
-                      Set_endminute={this.props.Set_endminute.bind(this)}
+                      setEndMinute={this.props.setEndMinute.bind(this)}
                       backups={this.props.origin.backups}
                       start_hour={this.props.origin.start_hour}
                       start_minute={this.props.origin.start_minute}
@@ -179,7 +176,7 @@ class Modal extends React.Component {
                   <div className='select-color'>
                     <p>予定の背景色</p>
                     <TileColor
-                      Set_tileColor={this.props.Set_tileColor.bind(this)}
+                      setTileColor={this.props.setTileColor.bind(this)}
                       backups={this.props.origin.backups}
                     />
                   </div>
