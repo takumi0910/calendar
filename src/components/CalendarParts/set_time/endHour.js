@@ -1,9 +1,6 @@
 import React from 'react';
 
 class EndHour extends React.Component {
-    constructor(props) {
-        super(props);
-    }
 
     handleTime(e) {
         const time = e.target.value
@@ -12,13 +9,13 @@ class EndHour extends React.Component {
 
     selectEndHour() {
         let options = []
-        let limitedH = this.props.startHour
-        let endH = Number(this.props.endHour)
-        let endDh = Number(this.props.backups[2])
+        let limitedH = this.props.origin.startHour
+        let endH = Number(this.props.origin.endHour)
+        let endDh = Number(this.props.origin.backups[2])
 
-        if (!limitedH && !this.props.backups[0]) {
-        } else if (!limitedH && this.props.backups[0]) {
-            limitedH = this.props.backups[0]
+        if (!limitedH && !this.props.origin.backups[0]) {
+        } else if (!limitedH && this.props.origin.backups[0]) {
+            limitedH = this.props.origin.backups[0]
         }
 
         if (!endH && endDh) {
@@ -37,7 +34,7 @@ class EndHour extends React.Component {
         }
 
         return (
-            <select defaultValue={this.props.backups[2]}
+            <select defaultValue={this.props.origin.backups[2]}
                 onChange={this.handleTime.bind(this)}>
                 {options}
             </select >

@@ -1,9 +1,9 @@
 import React from 'react'
-import EndHour from '../set_time/endHour'
-import EndMinute from '../set_time/endMinute'
-import StartHour from '../set_time/startHour'
-import TileColor from '../set_time/tileColor'
-import StartMinute from '../set_time/startMinute'
+import EndHour from './set_time/endHour'
+import EndMinute from './set_time/endMinute'
+import StartHour from './set_time/startHour'
+import TileColor from './set_time/tileColor'
+import StartMinute from './set_time/startMinute'
 
 class Modal extends React.Component {
 
@@ -159,18 +159,12 @@ class Modal extends React.Component {
                     <p>～</p>
                     <EndHour
                       setEndHour={this.props.setEndHour.bind(this)}
-                      backups={this.props.origin.backups}
-                      startHour={this.props.origin.startHour}
-                      endHour={this.props.origin.endHour}
+                      origin={this.props.origin}
                     />
                     <p>:</p>
                     <EndMinute
                       setEndMinute={this.props.setEndMinute.bind(this)}
-                      backups={this.props.origin.backups}
-                      startHour={this.props.origin.startHour}
-                      startMinute={this.props.origin.startMinute}
-                      endHour={this.props.origin.endHour}
-                      endMinute={this.props.origin.endMinute}
+                      origin={this.props.origin}
                     />
                   </div>
                   <div className='select-color'>
@@ -182,7 +176,7 @@ class Modal extends React.Component {
                   </div>
                 </div>
                 <p className='plan-contents'>予定の内容</p>
-                <input defaultValue='' required
+                <input  required
                   onChange={this.props.handleChange} defaultValue={this.defaultForm()}
                 />
                 <input

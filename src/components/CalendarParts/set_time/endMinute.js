@@ -1,9 +1,7 @@
 import React from 'react';
 
 class EndMinute extends React.Component {
-    constructor(props) {
-        super(props);
-    }
+
 
     handleTime(e) {
         const time = e.target.value
@@ -12,15 +10,15 @@ class EndMinute extends React.Component {
 
     selectEndMinute() {
         let options = []
-        let startH = this.props.startHour
-        let endM = this.props.endMinute
-        let endH = this.props.endHour
-        let startDh = this.props.backups[0]
-        let startDm = this.props.backups[1]
-        let endDh = this.props.backups[2]
+        let startH = this.props.origin.startHour
+        let endM = this.props.origin.endMinute
+        let endH = this.props.origin.endHour
+        let startDh = this.props.origin.backups[0]
+        let startDm = this.props.origin.backups[1]
+        let endDh = this.props.origin.backups[2]
         let limitedStart = ''
         let limitedEnd = ''
-        let limitedMinutes = this.props.startMinute
+        let limitedMinutes = this.props.origin.startMinute
 
         //分数制限の値の算出
         if (!limitedMinutes && startDm) {
@@ -66,10 +64,10 @@ class EndMinute extends React.Component {
                 }
             }
         } else if (limitedStart === limitedEnd) {
-            for (var i = 0; i <= 50; i++) {
-                if (i % 10 === 0 && i >= limitedMinutes) {
-                    let j = ('0' + i).slice(-2);
-                    if (i !== Number(endM)) {
+            for (var t = 0; t <= 50; t++) {
+                if (t % 10 === 0 && t >= limitedMinutes) {
+                    let j = ('0' + t).slice(-2);
+                    if (t !== Number(endM)) {
                         options.push(<option value={j}>{j}</option>)
                     }
                     else {
@@ -80,7 +78,7 @@ class EndMinute extends React.Component {
         }
 
         return (
-            <select defaultValue={this.props.backups[3]}
+            <select defaultValue={this.props.origin.backups[3]}
                 onChange={this.handleTime.bind(this)}>
                 {options}
             </select>

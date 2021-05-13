@@ -1,9 +1,6 @@
 import React from 'react';
 
 class StartMinute extends React.Component {
-    constructor(props) {
-        super(props);
-    }
 
     handleTime(e) {
         const time = e.target.value
