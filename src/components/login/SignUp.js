@@ -13,8 +13,8 @@ class SignUp extends React.Component {
     }
 
     registerMail(e) {
-        let adress = e.target.value
-        this.setState({ mail: adress })
+        let address = e.target.value
+        this.setState({ mail: address })
     }
 
     registerPass(e) {

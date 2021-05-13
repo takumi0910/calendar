@@ -1,36 +1,36 @@
 import React from 'react';
 
-class End_Hour extends React.Component {
+class EndHour extends React.Component {
     constructor(props) {
         super(props);
     }
 
-    handletime(e) {
+    handleTime(e) {
         const time = e.target.value
         this.props.setEndHour(time)
     }
 
-    select_endhour() {
+    selectEndHour() {
         let options = []
-        let limited_h = this.props.start_hour
-        let end_h = Number(this.props.end_hour)
-        let end_dh = Number(this.props.backups[2])
+        let limitedH = this.props.startHour
+        let endH = Number(this.props.endHour)
+        let endDh = Number(this.props.backups[2])
 
-        if (!limited_h && !this.props.backups[0]) {
-        } else if (!limited_h && this.props.backups[0]) {
-            limited_h = this.props.backups[0]
+        if (!limitedH && !this.props.backups[0]) {
+        } else if (!limitedH && this.props.backups[0]) {
+            limitedH = this.props.backups[0]
         }
 
-        if (!end_h && end_dh) {
-            end_h = end_dh
+        if (!endH && endDh) {
+            endH = endDh
         }
 
         for (var i = 0; i <= 23; i++) {
-            if (i >= limited_h) {
-                if (i === end_h) {
+            if (i >= limitedH) {
+                if (i === endH) {
                     options.push(<option value={i} selected>{i}</option>)
                 }
-                else if (i !== end_h) {
+                else if (i !== endH) {
                     options.push(<option value={i}>{i}</option>)
                 }
             }
@@ -38,7 +38,7 @@ class End_Hour extends React.Component {
 
         return (
             <select defaultValue={this.props.backups[2]}
-                onChange={this.handletime.bind(this)}>
+                onChange={this.handleTime.bind(this)}>
                 {options}
             </select >
         )
@@ -47,10 +47,10 @@ class End_Hour extends React.Component {
     render() {
         return (
             <div>
-                {this.select_endhour()}
+                {this.selectEndHour()}
             </div>
         );
     }
 }
 
-export default End_Hour;
+export default EndHour;

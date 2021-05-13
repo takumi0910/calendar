@@ -1,16 +1,16 @@
 import React from 'react';
 
-class Start_Minute extends React.Component {
+class StartMinute extends React.Component {
     constructor(props) {
         super(props);
     }
 
-    handletime(e) {
+    handleTime(e) {
         const time = e.target.value
         this.props.setStartMinute(time)
     }
 
-    select_startminute() {
+    selectStartMinute() {
         let options = []
         for (var i = 0; i <= 50; i++) {
             let j = ('0' + i).slice(-2);
@@ -20,7 +20,7 @@ class Start_Minute extends React.Component {
         }
         return (
             <select defaultValue={this.props.backups[1]}
-                onChange={this.handletime.bind(this)}>
+                onChange={this.handleTime.bind(this)}>
                 {options}
             </select>
         )
@@ -29,10 +29,10 @@ class Start_Minute extends React.Component {
     render() {
         return (
             <div>
-                {this.select_startminute()}
+                {this.selectStartMinute()}
             </div>
         );
     }
 }
 
-export default Start_Minute;
+export default StartMinute;

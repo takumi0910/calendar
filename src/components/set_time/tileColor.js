@@ -11,10 +11,10 @@ class TileColor extends React.Component {
     }
 
     render() {
-        let default_color = this.props.backups[5]
+        let defaultColor = this.props.backups[5]
         return (
             <input type='color'
-                defaultValue={default_color}
+                defaultValue={defaultColor}
                 onChange={this.handletime.bind(this)}
                 >
             </input>

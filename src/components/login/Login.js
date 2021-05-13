@@ -10,12 +10,12 @@ class Login extends React.Component {
         };
     }
 
-    register_mail(e) {
+    registerMail(e) {
         let adress = e.target.value
         this.setState({ mail: adress })
     }
 
-    register_pass(e) {
+    registerPass(e) {
         let password = e.target.value
         this.setState({ pass: password })
     }
@@ -33,9 +33,9 @@ class Login extends React.Component {
             <div className='login-form'>
                 <div className='main'>
                     <div className='mail'>メールアドレス</div>
-                    <input type="text" placeholder='example@gmail.com' onChange={this.register_mail.bind(this)} />
+                    <input type="text" placeholder='example@gmail.com' onChange={this.registerMail.bind(this)} />
                     <div className='pass'>パスワード</div>
-                    <input type="text" placeholder='password' onChange={this.register_pass.bind(this)} />
+                    <input type="text" placeholder='password' onChange={this.registerPass.bind(this)} />
                     <button className='login-btn' onClick={() => this.handleLogin()}>ログイン</button>
                     <Link to='/signup'>
                         <button>新規登録(未完成)</button>

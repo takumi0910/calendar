@@ -1,9 +1,9 @@
 import React from 'react'
-import End_Hour from './set_time/end_hour'
-import End_Minute from './set_time/end_minute'
-import Start_Hour from './set_time/start_hour'
-import TileColor from './set_time/tile_color'
-import Start_Minute from './set_time/start_minute'
+import EndHour from '../set_time/endHour'
+import EndMinute from '../set_time/endMinute'
+import StartHour from '../set_time/startHour'
+import TileColor from '../set_time/tileColor'
+import StartMinute from '../set_time/startMinute'
 
 class Modal extends React.Component {
 
@@ -42,43 +42,43 @@ class Modal extends React.Component {
     date = Number(date)
 
     //props.originを変数に代入
-    let start_h = this.props.origin.start_hour
-    let start_m = this.props.origin.start_minute
-    let end_h = this.props.origin.end_hour
-    let end_m = this.props.origin.end_minute
-    let form = this.props.origin.formvalues
+    let startH = this.props.origin.startHour
+    let startM = this.props.origin.startMinute
+    let endH = this.props.origin.endHour
+    let endM = this.props.origin.endMinute
+    let form = this.props.origin.formValues
     let color = ''
 
     // 予定が始まる時間が空か確かめる（1時間単位）
-    if (!start_h && this.props.origin.backups[0]) {
-      start_h = this.props.origin.backups[0]
-    } else if (!start_h && !this.props.origin.backups[0]) {
-      start_h = '0'
+    if (!startH && this.props.origin.backups[0]) {
+      startH = this.props.origin.backups[0]
+    } else if (!startH && !this.props.origin.backups[0]) {
+      startH = '0'
     }
 
     //予定が始まる時間が空か確かめる（1分単位）
-    if (!start_m && this.props.origin.backups[1]) {
-      start_m = this.props.origin.backups[1]
-    } else if (!start_m && !this.props.origin.backups[1]) {
-      start_m = '00'
+    if (!startM && this.props.origin.backups[1]) {
+      startM = this.props.origin.backups[1]
+    } else if (!startM && !this.props.origin.backups[1]) {
+      startM = '00'
     }
 
     //予定が終わる時間が空か確かめる（1時間単位）
-    if (!end_h && this.props.origin.backups[2]) {
-      if (this.props.origin.start_hour > this.props.origin.backups[2]) {
-        end_h = this.props.origin.start_hour
+    if (!endH && this.props.origin.backups[2]) {
+      if (this.props.origin.startHour > this.props.origin.backups[2]) {
+        endH = this.props.origin.startHour
       } else {
-        end_h = this.props.origin.backups[2]
+        endH = this.props.origin.backups[2]
       }
-    } else if (!end_h && !this.props.origin.backups[2] && start_h) {
-      end_h = start_h
+    } else if (!endH && !this.props.origin.backups[2] && startH) {
+      endH = startH
     }
 
     //予定が終わる時間が空か確かめる（1分単位）
-    if (!end_m && this.props.origin.backups[3]) {
-      end_m = this.props.origin.backups[3]
-    } else if (!end_m && !this.props.origin.backups[3] && start_m) {
-      end_m = start_m
+    if (!endM && this.props.origin.backups[3]) {
+      endM = this.props.origin.backups[3]
+    } else if (!endM && !this.props.origin.backups[3] && startM) {
+      endM = startM
     }
 
     //予定内容が空か確かめる
@@ -88,41 +88,41 @@ class Modal extends React.Component {
       form = ''
     }
 
-    if (!this.props.origin.back_color && this.props.origin.backups[5]) {
+    if (!this.props.origin.backColor && this.props.origin.backups[5]) {
       color = this.props.origin.backups[5]
-    } else if (!this.props.origin.back_color && !this.props.origin.backups[5]) {
+    } else if (!this.props.origin.backColor && !this.props.origin.backups[5]) {
       color = 'black'
     } else {
-      color = this.props.origin.back_color
+      color = this.props.origin.backColor
     }
 
     //入力処理の間違いを防ぐ
-    if (end_h < start_h) {
-      end_h = start_h
+    if (endH < startH) {
+      endH = startH
     }
-    if (start_h === end_h && start_m > end_m) {
-      end_m = start_m
+    if (startH === endH && startM > endM) {
+      endM = startM
     }
 
     //予定の開始時間と終了時間を出力する表示に変更
-    let start_time = start_h + ':' + start_m
-    let end_time = end_h + ':' + end_m
+    let startTime = startH + ':' + startM
+    let endTime = endH + ':' + endM
 
     if (index !== -1) {
       copySate[date].push({
         id: random_id,
-        text: (start_time + '～' + end_time + '\n' + form),
-        backup: [start_h, start_m, end_h, end_m, form],
-        back_color: color
+        text: (startTime + '～' + endTime + '\n' + form),
+        backup: [startH, startM, endH, endM, form],
+        backColor: color
       })
     }
-    else if (form && start_time !== ':' || end_time !== ':') {
+    else if (form && startTime !== ':' || endTime !== ':') {
       copySate[date] = [
         {
           id: random_id,
-          text: (start_time + '～' + end_time + '\n' + form),
-          backup: [start_h, start_m, end_h, end_m, form],
-          back_color: color
+          text: (startTime + '～' + endTime + '\n' + form),
+          backup: [startH, startM, endH, endM, form],
+          backColor: color
         }
       ]
     }
@@ -147,30 +147,30 @@ class Modal extends React.Component {
                   <p>選択した日 : {this.formatDate(this.props.origin.selectedDate)}</p>
                   <p className='plans-time'>予定時間</p>
                   <div className='time-box'>
-                    <Start_Hour
+                    <StartHour
                       setStartHour={this.props.setStartHour.bind(this)}
                       backups={this.props.origin.backups}
                     />
                     <p>:</p>
-                    <Start_Minute
+                    <StartMinute
                       setStartMinute={this.props.setStartMinute.bind(this)}
                       backups={this.props.origin.backups}
                     />
                     <p>～</p>
-                    <End_Hour
+                    <EndHour
                       setEndHour={this.props.setEndHour.bind(this)}
                       backups={this.props.origin.backups}
-                      start_hour={this.props.origin.start_hour}
-                      end_hour={this.props.origin.end_hour}
+                      startHour={this.props.origin.startHour}
+                      endHour={this.props.origin.endHour}
                     />
                     <p>:</p>
-                    <End_Minute
+                    <EndMinute
                       setEndMinute={this.props.setEndMinute.bind(this)}
                       backups={this.props.origin.backups}
-                      start_hour={this.props.origin.start_hour}
-                      start_minute={this.props.origin.start_minute}
-                      end_hour={this.props.origin.end_hour}
-                      end_minute={this.props.origin.end_minute}
+                      startHour={this.props.origin.startHour}
+                      startMinute={this.props.origin.startMinute}
+                      endHour={this.props.origin.endHour}
+                      endMinute={this.props.origin.endMinute}
                     />
                   </div>
                   <div className='select-color'>
