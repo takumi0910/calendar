@@ -7,8 +7,6 @@ import SignUp from './components/login/SignUp';
 import MainCalendar from './components/Calendar'
 
 export default class App extends React.Component {
-
-
   render() {
     return (
       <BrowserRouter>

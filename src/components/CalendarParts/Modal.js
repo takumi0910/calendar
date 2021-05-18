@@ -8,10 +8,8 @@ import StartMinute from './set_time/startMinute'
 class Modal extends React.Component {
 
   //ランダムなidの作成
-  getUniqueStr(myStrong) {
-    var strong = 1000;
-    if (myStrong) strong = myStrong;
-    return new Date().getTime().toString(16) + Math.floor(strong * Math.random()).toString(16)
+  getUniqueStr(myStrong = 1000) {
+    return new Date().getTime().toString(16) + Math.floor(myStrong * Math.random()).toString(16)
   }
 
   //モーダル上部に予定を入れようとしている日付を表示
@@ -28,7 +26,7 @@ class Modal extends React.Component {
 
   submit() {
     this.props.handleClose()
-    
+
     let date = this.props.getFormatDate(new Date(this.props.origin.selectedDate))
 
     const copySate = this.props.origin.month_days
@@ -176,7 +174,7 @@ class Modal extends React.Component {
                   </div>
                 </div>
                 <p className='plan-contents'>予定の内容</p>
-                <input  required
+                <input required
                   onChange={this.props.handleChange} defaultValue={this.defaultForm()}
                 />
                 <input
