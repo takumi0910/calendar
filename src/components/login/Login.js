@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
+import firebase from '../../Firebase';
 
 class Login extends React.Component {
     constructor(props) {
@@ -9,6 +10,25 @@ class Login extends React.Component {
             pass: '',
         };
     }
+
+    handleOnLogin() {
+        //spinner表示開始
+        //サインイン（ログイン）処理
+        firebase.auth().signInWithEmailAndPassword(this.state.mail, this.state.pass)
+            .then(() => {
+                //正常終了時
+                console.log('success')
+                localStorage.setItem("login", true);
+                this.props.history.push("/");
+
+            })
+            .catch(() => {
+                //エラー発生時
+                alert('error');
+            });
+
+    }
+
 
     registerMail(e) {
         let address = e.target.value
@@ -61,7 +81,6 @@ class Login extends React.Component {
     }
 
     render() {
-        console.log(this.state.userInformation)
         return (
             <div className='login-form'>
                 <div className='main'>
@@ -69,7 +88,7 @@ class Login extends React.Component {
                     <input type="email" required placeholder='example@gmail.com' onChange={this.registerMail.bind(this)} />
                     <div className='pass'>パスワード</div>
                     <input type="text" required placeholder='password' onChange={this.registerPass.bind(this)} />
-                    <button className='login-btn' onClick={() => this.handleLogin()}>ログイン</button>
+                    <button className='login-btn' onClick={() => this.handleOnLogin()}>ログイン</button>
                     <div>
                         <p className='signup'>初めてご利用される方はこちら</p>
                         <Link to='/signup'>

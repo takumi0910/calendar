@@ -1,5 +1,7 @@
 import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
+import firebase from '../../Firebase';
+
 
 class SignUp extends React.Component {
     constructor(props) {
@@ -11,6 +13,18 @@ class SignUp extends React.Component {
             OpenModal: false,
             userInformation: {}
         };
+    }
+
+    handleOnSubmit(){
+        //新規登録処理
+        firebase.auth().createUserWithEmailAndPassword(this.state.mail, this.state.pass)
+            .then(() => {
+                //Homeに移動
+                this.props.history.push("/");
+            })
+            .catch(() => {
+                console.log('error')
+            });
     }
 
     registerMail(e) {
@@ -81,7 +95,7 @@ class SignUp extends React.Component {
                     <input type="email" required placeholder='example@gmail.com' onChange={this.registerMail.bind(this)} />
                     <div className='pass'>パスワード</div>
                     <input type="text" required placeholder='password' onChange={this.registerPass.bind(this)} />
-                    <button className='login-btn' type='submit' onClick={this.plus.bind(this)}>登録</button>
+                    <button className='login-btn' type='submit' onClick={() => this.handleOnSubmit()}>登録</button>
                 </div>
                 {finishSignUp}
             </div>
