@@ -4,8 +4,6 @@ import firebase from '../../Firebase';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { TextField, Button, Container } from '@material-ui/core';
-import Shot from './Google';
-import Google from './Google';
 
 class Login extends React.Component {
     handleOnLogin(values) {
@@ -67,7 +65,6 @@ class Login extends React.Component {
                             )
                         }
                     </Formik>
-                    <Google />
                     <div className='signup-wrap'>
                         <p className='signup'>初めてご利用される方はこちら<Link to='/signup'><a className='signup-link'>新規登録</a></Link></p>
 
