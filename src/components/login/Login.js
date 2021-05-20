@@ -3,7 +3,8 @@ import { Link, withRouter } from 'react-router-dom';
 import firebase from '../../Firebase';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { TextField, Button, CssBaseline } from '@material-ui/core';
+import { TextField, Button, Container } from '@material-ui/core';
+import Shot from './Google';
 
 class Login extends React.Component {
     handleOnLogin(values) {
@@ -23,51 +24,55 @@ class Login extends React.Component {
 
     render() {
         return (
-            <CssBaseline>
-                <div className='login-form'>
+            <div className='back'>
+                <Container className='login-form'>
                     <Formik
                         initialValues={{ email: '', password: '' }}
                         onSubmit={(values) => this.handleOnLogin(values)}
                         validationSchema={Yup.object().shape({
-                            email: Yup.string().email().required(),
-                            password: Yup.string().required(),
+                            email: Yup.string('メールアドレスを正しい形式で入力してください').email('メールアドレスを正しい形式で入力してください').required('メールアドレスは記入必須です'),
+                            password: Yup.string('パスワードは6文字以上で設定してください').required('パスワードは入力必須です'),
                         })}
                     >
                         {
                             ({ handleSubmit, handleChange, handleBlur, values, errors, touched }) => (
                                 <form onSubmit={handleSubmit}>
                                     <TextField
+                                        size='medium'
                                         label="Email"
                                         type="email"
                                         name="email"
+                                        className='email'
                                         id="email-form"
                                         value={values.email}
                                         onChange={handleChange}
                                         onBlur={handleBlur}
                                         invalid={touched.email && errors.email ? true : false}
                                     />
+                                    <div>{errors.email}</div>
                                     <TextField label="password"
                                         type="password"
                                         name="password"
                                         id="password-form"
+                                        className='password'
                                         value={values.password}
                                         onChange={handleChange}
                                         onBlur={handleBlur}
                                         invalid={touched.password && errors.password ? true : false}
                                     />
-                                    <div>
-                                        <Button variant="contained" color="primary" type='submit'>ログイン</Button>
-                                    </div>
+                                    <div>{errors.password}</div>
+                                    <Button className='btn' variant="contained" color='primary' type='submit'>ログイン</Button>
                                 </form>
                             )
                         }
                     </Formik>
-                    <p className='signup'>初めてご利用される方はこちら</p>
-                    <Link to='/signup'>
-                        <a className='signup-link'>新規登録</a>
-                    </Link>
-                </div>
-            </CssBaseline>
+                    <Shot />
+                    <div className='signup-wrap'>
+                        <p className='signup'>初めてご利用される方はこちら<Link to='/signup'><a className='signup-link'>新規登録</a></Link></p>
+
+                    </div>
+                </Container>
+            </div>
         );
     }
 }

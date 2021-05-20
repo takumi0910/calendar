@@ -191,84 +191,57 @@ button {
   margin-top: 20px;
 }
 
-/* ログイン画面のCSS */
-
-.login-form, .signup-form {
-  background-color: rgb(155, 155, 155);
-  width: 300px;
-  margin: 50px auto;
-  padding: 80px 100px;
-  position: relative;
-}
-
-.form-title {
-  text-align: center;
-  font-size: 30px;
-}
-
-.login-btn {
-  display: block;
-  background-color: #2db2ff;
-  color: white;
-  border-radius: 3px;
-  height: 40px;
-  width: 100%;
-}
 
 /* 新規登録画面のCSS */
 
-.signup {
-  margin: 50px 0 0 0;
-  display: block;
-  text-align: center;
-}
-
-.signup-title {
-  text-align: center;
-}
-
-.signup-link {
-  display: block;
-  text-align: center;
-  text-decoration: none;
-  color: #3131ff;
-}
-
-.main input {
-  height: 40px;
-  width: 300px;
-  border-radius: 2px;
-  font-size: 20px;
-  outline: none;
-  margin-bottom: 20px;
-}
-
-.finish {
+.back {
+  width: 100%;
+  height: 100%;
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 500px;
-  height: 420px;
-  background-color: rgb(155, 155, 155);
-  margin: auto auto;
-  text-align: center;
+  background-color: #deffcb;
+  z-index: -2;
 }
 
-.finish h2 {
-  text-align: center;
-  margin: 150px 0 0 0;
+body {
+  margin: 0;
+  padding: 0;
 }
 
-.finish button {
-  background-color: #ffc72d;
-  color: white;
-  border-radius: 3px;
-  height: 40px;
+/* ログイン画面のCSS */
+
+.login-form, .signup-form {
+  background-color: white;
+  width: 450px !important;
+  margin: 50px auto;
+  padding: 100px 20px;
+  position: relative;
+}
+
+.email, .password {
+  width: 100%;
+  margin: 10px;
+}
+
+.btn{
+  background-color: #9dcd64 !important;
+  margin: 20px auto 0 !important;
+  display: block !important;
   width: 300px;
-  margin: 30px 0 0 0;
 }
 
-.loading {
-  width: 100vw;
-  height: 100vh;
+.signup{
+  margin: 0;
+  text-align: center;
+}
+
+.signup-wrap{
+  margin-top: 40px;
+}
+
+.signup-link{
+ margin-left: 5px;
+}
+
+.signup-title{
+  text-align: center;
 }
