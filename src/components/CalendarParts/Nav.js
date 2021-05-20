@@ -1,11 +1,11 @@
 import React from 'react';
 import { NavLink, withRouter } from 'react-router-dom';
+import firebase from '../../Firebase';
 
 class Nav extends React.Component {
 
     handleLogout = () => {
-        localStorage.setItem("login", "false");
-        this.props.history.push("/");
+        firebase.auth().signOut();
     }
 
     render() {

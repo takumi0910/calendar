@@ -1,23 +1,15 @@
 import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import firebase from '../../Firebase';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
 
 
 class SignUp extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            mail: '',
-            pass: '',
-            userNumber: 0,
-            OpenModal: false,
-            userInformation: {}
-        };
-    }
 
-    handleOnSubmit(){
+    handleOnSubmit(values) {
         //新規登録処理
-        firebase.auth().createUserWithEmailAndPassword(this.state.mail, this.state.pass)
+        firebase.auth().createUserWithEmailAndPassword(values.email, values.password)
             .then(() => {
                 //Homeに移動
                 this.props.history.push("/");
@@ -27,56 +19,8 @@ class SignUp extends React.Component {
             });
     }
 
-    registerMail(e) {
-        let address = e.target.value
-        this.setState({ mail: address })
-    }
-
-    registerPass(e) {
-        let password = e.target.value
-        this.setState({ pass: password })
-    }
-
-    plus() {
-        let userNumber = this.state.userNumber;
-        let information = this.state.userInformation
-
-        if (this.state.mail && this.state.pass) {
-            information[userNumber] =
-            {
-                mail: this.state.mail,
-                pass: this.state.pass
-            }
-
-            this.setState({ userNumber: userNumber + 1 })
-            this.setState({ userInformation: information })
-            this.setState({ OpenModal: true })
-        }else{
-            alert('メールアドレスまたはパスワードが空欄です。ご入力ください')
-        }
-    }
-
-
-    // もし前回のデータがあったら、ローカルストレージの値を取得し、更新する
-    componentWillMount() {
-        if (localStorage.UserData) {
-            const saveDate = JSON.parse(localStorage.UserData);
-            this.setState({
-                userInformation: saveDate.userInformation,
-                userNumber: saveDate.userNumber
-            })
-        }
-    }
-
-    // stateが変更されたら実行
-    componentDidUpdate() {
-        localStorage.setItem('UserData', JSON.stringify(this.state));
-    }
-
     render() {
-        console.log(this.state.mail)
         let finishSignUp;
-        if (this.state.OpenModal === true) {
             finishSignUp = (
                 <div className='finish'>
                     <h2>登録完了</h2>
@@ -85,20 +29,44 @@ class SignUp extends React.Component {
                     </Link>
                 </div>
             )
-        }
 
         return (
-            <div className='signup-form'>
-                <h2 className='signup-title'>新規登録</h2>
-                <div className='main'>
-                    <div className='mail'>メールアドレス</div>
-                    <input type="email" required placeholder='example@gmail.com' onChange={this.registerMail.bind(this)} />
-                    <div className='pass'>パスワード</div>
-                    <input type="text" required placeholder='password' onChange={this.registerPass.bind(this)} />
-                    <button className='login-btn' type='submit' onClick={() => this.handleOnSubmit()}>登録</button>
-                </div>
-                {finishSignUp}
-            </div>
+            <Formik
+                initialValues={{ email: '', password: '' }}
+                onSubmit={(values) => this.handleOnSubmit(values)}
+                validationSchema={Yup.object().shape({
+                    email: Yup.string().email('email必須だよ').required(),
+                    password: Yup.string().required(),
+                })}
+            >
+                {
+                    ({ handleSubmit, handleChange, handleBlur, values, errors, touched }) => (
+                        <form onSubmit={handleSubmit}>
+                            <input
+                                type="email"
+                                name="email"
+                                value={values.email}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                            />
+                            {touched.email && errors.email ? <div>{errors.email}</div> : null}
+                            <input
+                                type="password"
+                                name="password"
+                                value={values.password}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                invalid={touched.password && errors.password ? <div>{errors.password}</div> : null}
+                            />
+                            <div style={{ textAlign: 'center' }}>
+                                <button type='submit'>
+                                    新規登録
+                                    </button>
+                            </div>
+                        </form>
+                    )
+                }
+            </Formik>
         );
     }
 }

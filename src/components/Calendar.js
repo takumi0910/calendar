@@ -167,6 +167,7 @@ export default class MainCalendar extends React.Component {
   }
 
   render() {
+    console.log(this.state)
     const title = ({ date, view }) => this.getTileContent({ date, view })
     return (
       <>
