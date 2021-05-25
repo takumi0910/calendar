@@ -1,5 +1,5 @@
 import React from 'react'
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { HashRouter as Router, Route, Switch } from 'react-router-dom';
 import Login from './components/login/Login';
 import Auth from './components/login/Auth';
 import Nav from './components/CalendarParts/Nav'
@@ -9,7 +9,7 @@ import MainCalendar from './components/Calendar'
 export default class App extends React.Component {
   render() {
     return (
-      <BrowserRouter>
+      <Router>
       <Switch>
         <Route exact path="/login" component={Login} />
         <Route exact path='/signup' component={SignUp} />
@@ -18,7 +18,7 @@ export default class App extends React.Component {
           <MainCalendar/>
         </Auth>
       </Switch>
-    </BrowserRouter>
+    </Router>
     );
   }
 }
