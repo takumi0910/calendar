@@ -39,8 +39,8 @@ class SignUp extends React.Component {
                         initialValues={{ email: '', password: '' }}
                         onSubmit={(values) => this.handleOnSubmit(values)}
                         validationSchema={Yup.object().shape({
-                            email: Yup.string('メールアドレスを正しい形式で入力してください').email('メールアドレスを正しい形式で入力してください').required('メールアドレスは記入必須です'),
-                            password: Yup.string('パスワードは6文字以上で設定してください').required('パスワードは入力必須です'),
+                            email: Yup.string().email('メールアドレスを正しい形式で入力してください').required('メールアドレスは記入必須です'),
+                            password: Yup.string().min(8, 'パスワードは8文字以上に設定してください').required('パスワードは入力必須です'),
                         })}
                     >
                         {
@@ -58,7 +58,7 @@ class SignUp extends React.Component {
                                         onBlur={handleBlur}
                                         invalid={touched.email && errors.email ? true : false}
                                     />
-                                    <div>{errors.email}</div>
+                                    <p className='mail-error'>{errors.email}</p>
                                     <TextField label="password"
                                         type="password"
                                         name="password"
@@ -69,7 +69,7 @@ class SignUp extends React.Component {
                                         onBlur={handleBlur}
                                         invalid={touched.password && errors.password ? true : false}
                                     />
-                                    <div>{errors.password}</div>
+                                    <p className='pass-error'>{errors.password}</p>
                                     <Button className='btn' variant="contained" color='primary' type='submit'>登録</Button>
                                 </form>
                             )

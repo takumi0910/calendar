@@ -1,10 +1,11 @@
 import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
-import firebase, { Google } from '../../Firebase';
+import firebase from '../../Firebase';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { TextField, Button, Container } from '@material-ui/core';
-import GoogleAuth from './Google';
+import GoogleAuth from './SocialLogin/Google';
+import Facebook from './SocialLogin/Facebook';
 
 class Login extends React.Component {
     handleOnLogin(values) {
@@ -12,14 +13,16 @@ class Login extends React.Component {
         firebase.auth().signInWithEmailAndPassword(values.email, values.password)
             .then(() => {
                 //正常終了時
-                localStorage.setItem("login", true);
                 this.props.history.push("/");
-
             })
-            .catch(() => {
+            .catch((error) => {
                 //エラー発生時
-                alert('error');
+                console.log(error)
             });
+    }
+
+    GoogleLogin() {
+        this.props.history.push("/");
     }
 
     render() {
@@ -30,8 +33,8 @@ class Login extends React.Component {
                         initialValues={{ email: '', password: '' }}
                         onSubmit={(values) => this.handleOnLogin(values)}
                         validationSchema={Yup.object().shape({
-                            email: Yup.string('メールアドレスを正しい形式で入力してください').email('メールアドレスを正しい形式で入力してください').required('メールアドレスは記入必須です'),
-                            password: Yup.string('パスワードは6文字以上で設定してください').required('パスワードは入力必須です'),
+                            email: Yup.string().email('メールアドレスを正しい形式で入力してください').required('メールアドレスは記入必須です'),
+                            password: Yup.string().required('パスワードは入力必須です'),
                         })}
                     >
                         {
@@ -49,7 +52,7 @@ class Login extends React.Component {
                                         onBlur={handleBlur}
                                         invalid={touched.email && errors.email ? true : false}
                                     />
-                                    <div>{errors.email}</div>
+                                    <p className='mail-error'>{errors.email}</p>
                                     <TextField label="password"
                                         type="password"
                                         name="password"
@@ -60,7 +63,7 @@ class Login extends React.Component {
                                         onBlur={handleBlur}
                                         invalid={touched.password && errors.password ? true : false}
                                     />
-                                    <div>{errors.password}</div>
+                                    <p className='pass-error'>{errors.password}</p>
                                     <Button className='btn' variant="contained" color='primary' type='submit'>ログイン</Button>
                                 </form>
                             )
@@ -71,7 +74,12 @@ class Login extends React.Component {
 
                     </div>
                 </Container>
-                <GoogleAuth />
+                <div class='test'>
+                    <GoogleAuth
+                        GoogleLogin={this.GoogleLogin.bind(this)}
+                    />
+                    <Facebook/>
+                </div>
             </div>
         );
     }

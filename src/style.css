@@ -191,7 +191,6 @@ button {
   margin-top: 20px;
 }
 
-
 /* 新規登録画面のCSS */
 
 .back {
@@ -222,26 +221,36 @@ body {
   margin: 10px;
 }
 
-.btn{
+.btn {
   background-color: #9dcd64 !important;
   margin: 20px auto 0 !important;
   display: block !important;
   width: 300px;
 }
 
-.signup{
+.signup {
   margin: 0;
   text-align: center;
 }
 
-.signup-wrap{
+.signup-wrap {
   margin-top: 40px;
 }
 
-.signup-link{
- margin-left: 5px;
+.signup-link {
+  margin-left: 5px;
 }
 
-.signup-title{
+.signup-title {
   text-align: center;
+}
+
+.test {
+  width: 400px;
+  margin: 0 auto;
+  background-color: #cccccc;
+}
+
+.mail-error, .pass-error {
+  color: red;
 }
