@@ -1,9 +1,10 @@
 import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
-import firebase from '../../Firebase';
+import firebase, { Google } from '../../Firebase';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { TextField, Button, Container } from '@material-ui/core';
+import GoogleAuth from './Google';
 
 class Login extends React.Component {
     handleOnLogin(values) {
@@ -70,6 +71,7 @@ class Login extends React.Component {
 
                     </div>
                 </Container>
+                <GoogleAuth />
             </div>
         );
     }
