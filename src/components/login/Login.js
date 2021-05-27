@@ -71,14 +71,13 @@ class Login extends React.Component {
                     </Formik>
                     <div className='signup-wrap'>
                         <p className='signup'>初めてご利用される方はこちら<Link to='/signup'><a className='signup-link'>新規登録</a></Link></p>
-
                     </div>
                 </Container>
                 <div class='test'>
                     <GoogleAuth
                         GoogleLogin={this.GoogleLogin.bind(this)}
                     />
-                    <Facebook/>
+                    <Facebook />
                 </div>
             </div>
         );

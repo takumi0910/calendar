@@ -1,6 +1,7 @@
 import React from 'react'
 import Calendar from 'react-calendar';
 import Modal from "./CalendarParts/Modal"
+import firebase from '../Firebase';
 
 export default class MainCalendar extends React.Component {
   constructor(props) {
@@ -18,6 +19,21 @@ export default class MainCalendar extends React.Component {
       backColor: '',
       title: ''
     };
+  }
+
+  Button = () => {
+    var db = firebase.firestore();
+    db.collection("cities").add({
+      name: "Los Angeles",
+      state: "CA",
+      country: "USA"
+    })
+      .then(() => {
+        console.log("Document successfully written!");
+      })
+      .catch((error) => {
+        console.error("Error writing document: ", error);
+      });
   }
 
   // state の日付と同じ表記に変換
@@ -177,6 +193,7 @@ export default class MainCalendar extends React.Component {
           value={this.state.date}
           onClickDay={this.openModal.bind(this)}
         />
+        <button onClick={this.Button}>button</button>
         <Modal
           getFormatDate={this.getFormatDate.bind(this)}
           handleChange={this.handleChange.bind(this)}

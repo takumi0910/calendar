@@ -17,13 +17,14 @@ class GoogleAuth extends Component {
     login() {
         const provider = new firebase.auth.GoogleAuthProvider()
         firebase.auth().signInWithPopup(provider)
-            .then(() => {
-                this.props.GoogleLogin()
-            })
-            .catch(() => {
-                //エラー発生時
-                alert('error')
-            });
+        .then(() => {
+            //正常終了時
+            this.props.GoogleLogin()
+        })
+        .catch((error) => {
+            //エラー発生時
+            console.log(error)
+        });
     }
 
     logout() {
